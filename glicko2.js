@@ -1,16 +1,9 @@
 function Player(rating, rd , vol){
-  // Class attribute
-  // The system constant, which constrains
-  // the change in volatility over time.
-  rating = rating || 1500;
-  rd = rd || 200;
-  vol = vol || 0.06;
+  // The system constant, which constrains the change in volatility over time.
+  this.setRating(rating || 1500);
+  this.setRd(rd || 200);
+  this.vol = vol || 0.06;
   this._tau = 0.5;
-
-  this.setRating(rating);
-  this.setRd(rd);
-  this.vol = vol;
-
 }
 
 Player.prototype.getRating = function (){
@@ -30,19 +23,15 @@ Player.prototype.setRd = function(rd){
 };
 
            
+// Calculates and updates the player's rating deviation for the beginning of a rating period.
+// preRatingRD() -> None
 Player.prototype._preRatingRD = function(){
-    /* Calculates and updates the player's rating deviation for the beginning of a rating period.
-        
-     preRatingRD() -> None
-     */
   this.__rd = Math.sqrt(Math.pow(this.__rd, 2) + Math.pow(this.vol, 2));
 };
         
+// Calculates the new rating and rating deviation of the player.
+// update_player(list[int], list[int], list[bool]) -> None
 Player.prototype.update_player = function (rating_list_ini, RD_list_ini, outcome_list){
-  /* Calculates the new rating and rating deviation of the player.
-
-   update_player(list[int], list[int], list[bool]) -> None
-   */
   // Convert the rating and rating deviation values for internal use.
   var rating_list = [];
   for (var i=0, len = rating_list_ini.length;i<len;i++){
@@ -68,19 +57,15 @@ Player.prototype.update_player = function (rating_list_ini, RD_list_ini, outcome
 };
         
         
+// Calculating the new volatility as per the Glicko2 system.
+// _newVol(list, list, list) -> float
 Player.prototype._newVol = function( rating_list, RD_list, outcome_list, v){
-  /* Calculating the new volatility as per the Glicko2 system.
-
-   _newVol(list, list, list) -> float
-
-   */
   var i = 0;
   var delta = this._delta(rating_list, RD_list, outcome_list, v);
   var a = Math.log(Math.pow(this.vol, 2));
   var tau = this._tau;
   var x0 = a;
   var x1 = 0;
-
 
   while (x0 != x1){
     // New iteration, so x(i) becomes x(i-1)
@@ -94,12 +79,9 @@ Player.prototype._newVol = function( rating_list, RD_list, outcome_list, v){
   return Math.exp(x1 / 2);
 };
 
+// The delta function of the Glicko2 system.
+// _delta(list, list, list) -> float
 Player.prototype._delta = function( rating_list, RD_list, outcome_list, v){
-  /* The delta function of the Glicko2 system.
-
-   _delta(list, list, list) -> float
-
-   */
   var tempSum = 0;
   for (var i = 0, len = rating_list.length;i<len;i++){
     tempSum += this._g(RD_list[i]) * (outcome_list[i] - this._E(rating_list[i], RD_list[i]));
@@ -107,12 +89,9 @@ Player.prototype._delta = function( rating_list, RD_list, outcome_list, v){
   return v * tempSum;
 };
 
+// The v function of the Glicko2 system.
+// _v(list[int], list[int]) -> float
 Player.prototype._v = function ( rating_list, RD_list){
-  /* The v function of the Glicko2 system.
-
-   _v(list[int], list[int]) -> float
-
-   */
   var tempSum = 0;
   for (var i = 0, len = rating_list.length;i<len;i++){
     var tempE = this._E(rating_list[i], RD_list[i]);
@@ -121,31 +100,21 @@ Player.prototype._v = function ( rating_list, RD_list){
   return 1 / tempSum;
 };
 
+// The Glicko E function.
+// _E(int) -> float
 Player.prototype._E = function (p2rating, p2RD){
-  /* The Glicko E function.
-
-   _E(int) -> float
-
-   */
   return 1 / (1 + Math.exp(-1 * this._g(p2RD) *  (this.__rating - p2rating)));
 };
 
+// The Glicko2 g(RD) function.
+// _g() -> float
 Player.prototype._g = function( RD){
-  /* The Glicko2 g(RD) function.
-
-   _g() -> float
-
-   */
   return 1 / Math.sqrt(1 + 3 * Math.pow(RD, 2) / Math.pow(Math.PI, 2));
 };
 
+// Applies Step 6 of the algorithm. Use this for players who did not compete in the rating period.
+// did_not_compete() -> None
 Player.prototype.did_not_compete = function(){
-  /* Applies Step 6 of the algorithm. Use this for
-   players who did not compete in the rating period.
-
-   did_not_compete() -> None
-
-   */
   this._preRatingRD();
 };
 
