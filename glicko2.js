@@ -66,6 +66,7 @@ Player.prototype._newVol = function( rating_list, RD_list, outcome_list, v){
   var tau = this._tau;
   var x0 = a;
   var x1 = 0;
+  var d,h1,h2;
 
   while (x0 != x1){
     // New iteration, so x(i) becomes x(i-1)
