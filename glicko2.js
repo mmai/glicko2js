@@ -1,9 +1,8 @@
-function Player(rating, rd , vol){
-  // The system constant, which constrains the change in volatility over time.
-  this.setRating(rating || 1500);
-  this.setRd(rd || 200);
-  this.vol = vol || 0.06;
-  this._tau = 0.5;
+function Player(rating, rd , vol, tau){
+  this.setRating(rating);
+  this.setRd(rd);
+  this.vol = vol ;
+  this._tau = tau; 
 }
 
 Player.prototype.getRating = function (){
@@ -30,28 +29,28 @@ Player.prototype._preRatingRD = function(){
 };
         
 // Calculates the new rating and rating deviation of the player.
-// update_player(list[int], list[int], list[bool]) -> None
-Player.prototype.update_player = function (rating_list_ini, RD_list_ini, outcome_list){
+// update_rank() -> None
+Player.prototype.update_rank = function(){
   // Convert the rating and rating deviation values for internal use.
   var rating_list = [];
-  for (var i=0, len = rating_list_ini.length;i<len;i++){
-    rating_list[i] = (rating_list_ini[i] - 1500) / 173.7178 ;
+  for (var i=0, len = this.adv_ranks.length;i<len;i++){
+    rating_list[i] = (this.adv_ranks[i] - 1500) / 173.7178 ;
   }
 
   var RD_list = [];
-  for (i=0,len = RD_list_ini.length;i<len;i++){
-    RD_list[i] = RD_list_ini[i] / 173.7178 ;
+  for (i=0,len = this.adv_rds.length;i<len;i++){
+    RD_list[i] = this.adv_rds[i] / 173.7178 ;
   }
 
   var v = this._v(rating_list, RD_list);
-  this.vol = this._newVol(rating_list, RD_list, outcome_list, v);
+  this.vol = this._newVol(rating_list, RD_list, this.outcomes, v);
   this._preRatingRD();
 
   this.__rd = 1 / Math.sqrt((1 / Math.pow(this.__rd, 2)) + (1 / v));
 
   var tempSum = 0;
   for (i=0,len = rating_list.length;i< len;i++){
-    tempSum += this._g(RD_list[i]) * (outcome_list[i] - this._E(rating_list[i], RD_list[i]));
+    tempSum += this._g(RD_list[i]) * (this.outcomes[i] - this._E(rating_list[i], RD_list[i]));
   }
   this.__rating += Math.pow(this.__rd, 2) * tempSum;
 };
@@ -119,4 +118,42 @@ Player.prototype.did_not_compete = function(){
   this._preRatingRD();
 };
 
+function Ranking(settings){
+  this._tau = settings.tau || 0.5; // "Reasonable choices are between 0.3 and 1.2, though the system should be tested to decide which value results in greatest predictive accuracy."
+  this._default_rating = settings.rating || 1500;
+  this._default_rd = settings.rd || 200;
+  this._default_vol = settings.val || 0.06;
+  this.players = [];
+}
+
+Ranking.prototype.startPeriod = function(){
+};
+
+Ranking.prototype.stopPeriod = function(){
+  for (var i = 0, len = this.players.length;i < len;i++){
+    this.players[i].update_rank();
+  }
+};
+
+Ranking.prototype.addResult = function(player1, player2, outcome){
+  player1.adv_ranks.push(player2.getRating());
+  player1.adv_rds.push(player2.getRd());
+  player1.outcomes.push(outcome);
+
+  player2.adv_ranks.push(player1.getRating());
+  player2.adv_rds.push(player1.getRd());
+  player2.outcomes.push(1 - outcome);
+};
+
+Ranking.prototype.makePlayer = function (rating, rd , vol){
+  var player = new Player(rating || this._default_rating, rd || this._default_rd, vol || this._default_vol, this._tau);
+  player.adv_ranks = [];
+  player.adv_rds = [];
+  player.outcomes = [];
+  this.players.push(player);
+  return player;
+};
+
+
 exports.Player = Player;
+exports.Ranking = Ranking;
