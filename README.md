@@ -18,7 +18,7 @@ var settings = {
   rating : 1500, //default rating
   rd : 200, //Default rating deviation (small number = good confidence on the rating accuracy)
   vol : 0.06 //Default volatility (expected fluctation on the player rating)
-}
+};
 var ranking = new glicko2.Ranking(settings);
 
 // Create players
