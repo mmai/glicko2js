@@ -1,7 +1,7 @@
 function Player(rating, rd , vol, tau){
   this.setRating(rating);
   this.setRd(rd);
-  this.vol = vol ;
+  this.setVol(vol);
   this._tau = tau; 
 }
 
@@ -21,11 +21,19 @@ Player.prototype.setRd = function(rd){
   this.__rd = rd / 173.7178;
 };
 
+Player.prototype.getVol = function(){
+  return this.__vol;
+};
+
+Player.prototype.setVol = function(vol){
+  this.__vol = vol;
+};
+
            
 // Calculates and updates the player's rating deviation for the beginning of a rating period.
 // preRatingRD() -> None
 Player.prototype._preRatingRD = function(){
-  this.__rd = Math.sqrt(Math.pow(this.__rd, 2) + Math.pow(this.vol, 2));
+  this.__rd = Math.sqrt(Math.pow(this.__rd, 2) + Math.pow(this.__vol, 2));
 };
         
 // Calculates the new rating and rating deviation of the player.
@@ -43,7 +51,7 @@ Player.prototype.update_rank = function(){
   }
 
   var v = this._v(rating_list, RD_list);
-  this.vol = this._newVol(rating_list, RD_list, this.outcomes, v);
+  this.__vol = this._newVol(rating_list, RD_list, this.outcomes, v);
   this._preRatingRD();
 
   this.__rd = 1 / Math.sqrt((1 / Math.pow(this.__rd, 2)) + (1 / v));
@@ -61,7 +69,7 @@ Player.prototype.update_rank = function(){
 Player.prototype._newVol = function( rating_list, RD_list, outcome_list, v){
   var i = 0;
   var delta = this._delta(rating_list, RD_list, outcome_list, v);
-  var a = Math.log(Math.pow(this.vol, 2));
+  var a = Math.log(Math.pow(this.__vol, 2));
   var tau = this._tau;
   var x0 = a;
   var x1 = 0;
@@ -119,14 +127,27 @@ Player.prototype.did_not_compete = function(){
 };
 
 function Ranking(settings){
-  this._tau = settings.tau || 0.5; // "Reasonable choices are between 0.3 and 1.2, though the system should be tested to decide which value results in greatest predictive accuracy."
-  this._default_rating = settings.rating || 1500;
-  this._default_rd = settings.rd || 200;
-  this._default_vol = settings.val || 0.06;
+  settings = settings || {
+    tau : 0.5, // Internal glicko2 parameter. "Reasonable choices are between 0.3 and 1.2, though the system should be tested to decide which value results in greatest predictive accuracy."
+    rating : 1500, //default rating
+    rd : 200, //Default rating deviation (small number = good confidence on the rating accuracy)
+    vol : 0.06 //Default volatility (expected fluctation on the player rating)
+  };
+  console.log(settings);
+
+  this._tau = settings.tau;
+  this._default_rating = settings.rating;
+  this._default_rd = settings.rd;
+  this._default_vol = settings.vol;
   this.players = [];
 }
 
 Ranking.prototype.startPeriod = function(){
+  for (var i = 0, len = this.players.length;i < len;i++){
+    this.players[i].adv_ranks = [];
+    this.players[i].adv_rds = [];
+    this.players[i].outcomes = [];
+  }
 };
 
 Ranking.prototype.stopPeriod = function(){
@@ -155,5 +176,4 @@ Ranking.prototype.makePlayer = function (rating, rd , vol){
 };
 
 
-exports.Player = Player;
 exports.Ranking = Ranking;

@@ -14,7 +14,7 @@ describe('Ranking', function(){
             var player = ranking.makePlayer();
             player.getRating().should.equal(settings.rating);
             player.getRd().should.equal(settings.rd);
-            player.vol.should.equal(settings.vol);
+            player.getVol().should.equal(settings.vol);
           });
       });
     describe('stopPeriod()', function(){
@@ -44,7 +44,7 @@ describe('Ranking', function(){
 
             (Math.abs(Ryan.getRating() - 1464.06) < 0.01).should.be.true;
             (Math.abs(Ryan.getRd() - 151.52) < 0.01).should.be.true;
-            (Math.abs(Ryan.vol - 0.05999) < 0.00001).should.be.true;
+            (Math.abs(Ryan.getVol() - 0.05999) < 0.00001).should.be.true;
           });
       });
   });
