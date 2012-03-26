@@ -1,7 +1,7 @@
 {
   "name"            : "glicko2",
   "description"     : "glicko2 ranking system",
-  "version"         : "0.3.1",
+  "version"         : "0.4.0",
   "author"          : "Henri Bourcereau",
   "keywords"        : ["glicko", "utilities", "ranking"],
   "repository"      : {"type": "git", "url": "git://github.com/mmai/glicko2js.git"},

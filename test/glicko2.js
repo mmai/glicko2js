@@ -1,6 +1,6 @@
 var glicko2 = require('../glicko2');
 
-describe('Ranking', function(){
+describe('Glicko2', function(){
     describe('makePlayer()', function(){
         it('should make a default player', function(){
             var settings = {
@@ -10,14 +10,14 @@ describe('Ranking', function(){
               rd : 200,
               vol : 0.06
             };
-            var ranking = new glicko2.Ranking(settings);
-            var player = ranking.makePlayer();
+            var glicko = new glicko2.Glicko2(settings);
+            var player = glicko.makePlayer();
             player.getRating().should.equal(settings.rating);
             player.getRd().should.equal(settings.rd);
             player.getVol().should.equal(settings.vol);
           });
       });
-    describe('stopPeriod()', function(){
+    describe('updateRatings()', function(){
         it('should calculate new ratings', function(){
             // Following the example at:
             // http://math.bu.edu/people/mg/glicko/glicko2.doc/example.html
@@ -30,17 +30,18 @@ describe('Ranking', function(){
               rd : 200,
               vol : 0.06
             };
-            var ranking = new glicko2.Ranking(settings);
-            var Ryan = ranking.makePlayer();
-            var Bob = ranking.makePlayer(1400, 30, 0.06);
-            var John = ranking.makePlayer(1550, 100, 0.06);
-            var Mary = ranking.makePlayer(1700, 300, 0.06);
+            var glicko = new glicko2.Glicko2(settings);
+            var Ryan = glicko.makePlayer();
+            var Bob = glicko.makePlayer(1400, 30, 0.06);
+            var John = glicko.makePlayer(1550, 100, 0.06);
+            var Mary = glicko.makePlayer(1700, 300, 0.06);
 
-            ranking.startPeriod();
-            ranking.addResult(Ryan, Bob, 1); //Ryan won over Bob
-            ranking.addResult(Ryan, John, 0); //Ryan lost against John
-            ranking.addResult(Ryan, Mary, 0); //Ryan lost against Mary
-            ranking.stopPeriod();
+            var matches = [];
+            matches.push([Ryan, Bob, 1]); //Ryan won over Bob
+            matches.push([Ryan, John, 0]); //Ryan lost against John
+            matches.push([Ryan, Mary, 0]); //Ryan lost against Mary
+
+            glicko.updateRatings(matches);
 
             (Math.abs(Ryan.getRating() - 1464.06) < 0.01).should.be.true;
             (Math.abs(Ryan.getRd() - 151.52) < 0.01).should.be.true;

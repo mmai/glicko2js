@@ -126,14 +126,13 @@ Player.prototype.did_not_compete = function(){
   this._preRatingRD();
 };
 
-function Ranking(settings){
+function Glicko2(settings){
   settings = settings || {
     tau : 0.5, // Internal glicko2 parameter. "Reasonable choices are between 0.3 and 1.2, though the system should be tested to decide which value results in greatest predictive accuracy."
     rating : 1500, //default rating
     rd : 200, //Default rating deviation (small number = good confidence on the rating accuracy)
     vol : 0.06 //Default volatility (expected fluctation on the player rating)
   };
-  console.log(settings);
 
   this._tau = settings.tau;
   this._default_rating = settings.rating;
@@ -142,7 +141,7 @@ function Ranking(settings){
   this.players = [];
 }
 
-Ranking.prototype.startPeriod = function(){
+Glicko2.prototype.startPeriod = function(){
   for (var i = 0, len = this.players.length;i < len;i++){
     this.players[i].adv_ranks = [];
     this.players[i].adv_rds = [];
@@ -150,13 +149,13 @@ Ranking.prototype.startPeriod = function(){
   }
 };
 
-Ranking.prototype.stopPeriod = function(){
+Glicko2.prototype.stopPeriod = function(){
   for (var i = 0, len = this.players.length;i < len;i++){
     this.players[i].update_rank();
   }
 };
 
-Ranking.prototype.addResult = function(player1, player2, outcome){
+Glicko2.prototype.addResult = function(player1, player2, outcome){
   player1.adv_ranks.push(player2.getRating());
   player1.adv_rds.push(player2.getRd());
   player1.outcomes.push(outcome);
@@ -166,7 +165,16 @@ Ranking.prototype.addResult = function(player1, player2, outcome){
   player2.outcomes.push(1 - outcome);
 };
 
-Ranking.prototype.makePlayer = function (rating, rd , vol){
+Glicko2.prototype.updateRatings = function(matches){
+  this.startPeriod();
+  for (var i=0, len = matches.length;i<len;i++){
+    var match = matches[i];
+    this.addResult(match[0], match[1], match[2]);
+  }
+  this.stopPeriod();
+};
+
+Glicko2.prototype.makePlayer = function (rating, rd , vol){
   var player = new Player(rating || this._default_rating, rd || this._default_rd, vol || this._default_vol, this._tau);
   player.adv_ranks = [];
   player.adv_rds = [];
@@ -176,4 +184,4 @@ Ranking.prototype.makePlayer = function (rating, rd , vol){
 };
 
 
-exports.Ranking = Ranking;
+exports.Glicko2 = Glicko2;
