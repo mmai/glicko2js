@@ -7,7 +7,7 @@ Each player begins with a rating, a rating deviation (accuracy of the rating) an
 
 ## Usage
 
-You init a ranking and create players with initial ratings, rating deviations and volatilities.
+First we initiate a ranking manager and create players with initial ratings, rating deviations and volatilities.
 
 ``` javascript
 var glicko2 = require('glicko2');
@@ -26,17 +26,17 @@ var John = ranking.makePlayer(1550, 100, 0.06);
 var Mary = ranking.makePlayer(1700, 300, 0.06);
 ```
 
-You enter the results
+We can then enter results, calculate the new ratings
 
 ``` javascript
 var matches = [];
 matches.push([Ryan, Bob, 1]); //Ryan won over Bob
 matches.push([Ryan, John, 0]); //Ryan lost against John
-matches.push([Ryan, Mary, 0]); //Ryan lost against Mary
+matches.push([Ryan, Mary, 0.5]); //A draw between Ryan and Mary
 ranking.updateRatings(matches);
 ```
 
-You get the new rankings
+... and get these new ratings.
 
 ``` javascript
 console.log("Ryan new rating: " + Ryan.getRating());
@@ -44,7 +44,7 @@ console.log("Ryan new rating deviation: " + Ryan.getRd());
 console.log("Ryan new volatility: " + Ryan.getVol());
 ```
 
-## Install
+## Installation
 
 glicko2.js is available as a npm module.
 
