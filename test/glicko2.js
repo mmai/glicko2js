@@ -41,6 +41,24 @@ describe('Glicko2', function(){
             matches.push([Ryan, John, 0]); //Ryan lost against John
             matches.push([Ryan, Mary, 0]); //Ryan lost against Mary
 
+            /*Perfs testing
+            var players = [Bob, John, Mary];
+
+            var ind = 0;
+            while (ind++ < 50){
+              players.push(glicko.makePlayer());
+            }
+
+            var nbpl = players.length;
+            var pl1, pl2;
+            for (var i=0; i<1000;i++){
+              pl1 = players[Math.floor(Math.random() * nbpl)];
+              pl2 = players[Math.floor(Math.random() * nbpl)];
+              matches.push([pl1, pl2, Math.floor(Math.random() * 3) / 2]);
+            }
+            //End perfs
+            */
+
             glicko.updateRatings(matches);
 
             (Math.abs(Ryan.getRating() - 1464.06) < 0.01).should.be.true;
