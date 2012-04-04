@@ -131,6 +131,7 @@ function Glicko2(settings){
   this._default_rd = settings.rd;
   this._default_vol = settings.vol;
   this.players = [];
+  this.players_index = 0;
 }
 
 Glicko2.prototype.startPeriod = function(){
@@ -166,12 +167,27 @@ Glicko2.prototype.updateRatings = function(matches){
   this.stopPeriod();
 };
 
-Glicko2.prototype.makePlayer = function (rating, rd , vol){
+Glicko2.prototype.makePlayer = function (rating, rd , vol, id){
+  if (id === undefined){
+    id = this.players_index;
+    this.players_index = this.players_index + 1;
+  }
+  else {
+    if (typeof(id) === 'number'){
+      id = "a" + id;
+    }
+    //We check if the player has already been created
+    var candidate = this.players[id];
+    if (candidate !== undefined){
+      return candidate;
+    }
+  }
+
   var player = new Player(rating || this._default_rating, rd || this._default_rd, vol || this._default_vol, this._tau);
   player.adv_ranks = [];
   player.adv_rds = [];
   player.outcomes = [];
-  this.players.push(player);
+  this.players[id] = player;
   return player;
 };
 

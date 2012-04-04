@@ -2,19 +2,28 @@ var glicko2 = require('../glicko2');
 
 describe('Glicko2', function(){
     describe('makePlayer()', function(){
+        var settings = {
+          tau : 0.5,
+          rpd : 604800,
+          rating : 1500,
+          rd : 200,
+          vol : 0.06
+        };
+        var glicko = new glicko2.Glicko2(settings);
         it('should make a default player', function(){
-            var settings = {
-              tau : 0.5,
-              rpd : 604800,
-              rating : 1500,
-              rd : 200,
-              vol : 0.06
-            };
-            var glicko = new glicko2.Glicko2(settings);
             var player = glicko.makePlayer();
             player.getRating().should.equal(settings.rating);
             player.getRd().should.equal(settings.rd);
             player.getVol().should.equal(settings.vol);
+          });
+        it('should make only one player by id', function(){
+            var pl1 = glicko.makePlayer(1400, 30, 0.06, "e");
+            var pl2 = glicko.makePlayer(1550, 100, 0.06, "e");
+            var pl3 = glicko.makePlayer(1550, 100, 0.06, 77);
+            var pl4 = glicko.makePlayer(1550, 100, 0.06, 77);
+            var pl5 = glicko.makePlayer(1550, 100, 0.06);
+            //pl1 = pl2, pl3 = pl4, pl5, and the player from previous test
+            Object.keys(glicko.players).length.should.equal(4);
           });
       });
     describe('updateRatings()', function(){
@@ -32,8 +41,8 @@ describe('Glicko2', function(){
             };
             var glicko = new glicko2.Glicko2(settings);
             var Ryan = glicko.makePlayer();
-            var Bob = glicko.makePlayer(1400, 30, 0.06);
-            var John = glicko.makePlayer(1550, 100, 0.06);
+            var Bob = glicko.makePlayer(1400, 30, 0.06, 'bob');
+            var John = glicko.makePlayer(1550, 100, 0.06, 'john');
             var Mary = glicko.makePlayer(1700, 300, 0.06);
 
             var matches = [];
