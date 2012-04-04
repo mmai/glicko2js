@@ -143,11 +143,18 @@ Glicko2.prototype.startPeriod = function(){
 };
 
 Glicko2.prototype.stopPeriod = function(){
-  for (var i = 0, len = this.players.length;i < len;i++){
-    this.players[i].update_rank();
+  var keys = Object.keys(this.players);
+  for (var i=0, len = keys.length;i<len;i++){
+    this.players[keys[i]].update_rank();
   }
 };
 
+/** 
+ * Add a match result to be taken in account for the new rankings calculation
+ * @param {Player} player1 The first player
+ * @param {Player} player2 The second player
+ * @param {number} outcom The outcome : 0 = defeat, 1 = victory, 0.5 = draw
+ */
 Glicko2.prototype.addResult = function(player1, player2, outcome){
   player1.adv_ranks.push((player2.getRating() - 1500) / 173.7178);
   player1.adv_rds.push(player2.getRd() / 173.7178);
@@ -158,11 +165,27 @@ Glicko2.prototype.addResult = function(player1, player2, outcome){
   player2.outcomes.push(1 - outcome);
 };
 
+/** 
+ * Add players and match result to be taken in account for the new rankings calculation
+ * players must have ids, they are not created if it has been done already.
+ * @param {Object litteral} pl1 The first player
+ * @param {Object litteral} pl2 The second player
+ * @param {number} outcom The outcome : 0 = defeat, 1 = victory, 0.5 = draw
+ */
+Glicko2.prototype.addMatch = function(player1, player2, outcome){
+  var pl1 = this.makePlayer(player1.rating, player1.rd, player1.vol, player1.id);
+  var pl2 = this.makePlayer(player2.rating, player2.rd, player2.vol, player2.id);
+  this.addResult(pl1, pl2, outcome);
+  return {pl1:pl1, pl2:pl2};
+};
+
 Glicko2.prototype.updateRatings = function(matches){
-  this.startPeriod();
-  for (var i=0, len = matches.length;i<len;i++){
-    var match = matches[i];
-    this.addResult(match[0], match[1], match[2]);
+  if (typeof(matches) !== 'undefined'){
+    this.startPeriod();
+    for (var i=0, len = matches.length;i<len;i++){
+      var match = matches[i];
+      this.addResult(match[0], match[1], match[2]);
+    }
   }
   this.stopPeriod();
 };

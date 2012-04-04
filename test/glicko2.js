@@ -75,5 +75,37 @@ describe('Glicko2', function(){
             (Math.abs(Ryan.getVol() - 0.05999) < 0.00001).should.be.true;
           });
       });
+    describe('addMatch()', function(){
+        it('should add players and matches in one pass', function(){
+            var settings = {
+              tau : 0.5,
+              rpd : 604800,
+              rating : 1500,
+              rd : 200,
+              vol : 0.06
+            };
+            var glicko = new glicko2.Glicko2(settings);
+            var ryan = {rating:1500, rd:200, vol:0.06, id:'ryan'};
+            var bob = {rating:1400, rd:30, vol:0.06, id:'bob'};
+            var john = {rating:1550, rd:100, vol:0.06, id:'john'};
+            var mary = {rating:1700, rd:300, vol:0.06, id:'mary'};
+            var match, Ryan, Bob, John, Mary;
+            match = glicko.addMatch(ryan, bob, 1);
+            Ryan = match.pl1;
+            Bob = match.pl2;
+            match = glicko.addMatch(ryan, john, 0);
+            John = match.pl2;
+            match = glicko.addMatch(ryan, mary, 0);
+            Mary = match.pl2;
+
+            glicko.updateRatings();
+
+            Object.keys(glicko.players).length.should.equal(4);
+            Ryan.outcomes.length.should.equal(3);
+            (Math.abs(Ryan.getRating() - 1464.06) < 0.01).should.be.true;
+            (Math.abs(Ryan.getRd() - 151.52) < 0.01).should.be.true;
+            (Math.abs(Ryan.getVol() - 0.05999) < 0.00001).should.be.true;
+          });
+      });
   });
 
