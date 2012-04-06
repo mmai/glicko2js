@@ -26,9 +26,27 @@ describe('Glicko2', function(){
             Object.keys(glicko.players).length.should.equal(4);
           });
       });
+    describe('getPlayers()', function(){
+        it('should retrieve all players with ids', function(){
+        var settings = {
+          tau : 0.5,
+          rpd : 604800,
+          rating : 1500,
+          rd : 200,
+          vol : 0.06
+        };
+        var glicko = new glicko2.Glicko2(settings);
+        var player = glicko.makePlayer();
+        var pl1 = glicko.makePlayer(1400, 30, 0.06, "e");
+        var pl3 = glicko.makePlayer(1550, 100, 0.06, 77);
+        var players = glicko.getPlayers();
+        players.length.should.equal(3);
+        players[1].id.should.equal("e");
+      });
+  });
     describe('updateRatings()', function(){
         it('should calculate new ratings', function(){
-            // Following the example at:
+                    // Following the example at:
             // http://math.bu.edu/people/mg/glicko/glicko2.doc/example.html
             // Pretend Ryan (of rating 1500 and rating deviation 350) plays players of ratings 1400, 1550 and 1700
             // and rating deviations 30, 100 and 300 respectively with outcomes 1, 0 and 0.
@@ -76,7 +94,7 @@ describe('Glicko2', function(){
           });
       });
     describe('addMatch()', function(){
-        it('should add players and matches in one pass', function(){
+        it('should add players and matches at the same time', function(){
             var settings = {
               tau : 0.5,
               rpd : 604800,

@@ -44,6 +44,30 @@ console.log("Ryan new rating deviation: " + Ryan.getRd());
 console.log("Ryan new volatility: " + Ryan.getVol());
 ```
 
+Or you can add matches and players at the same time :
+
+``` javascript
+var ryan = {rating:1500, rd:200, vol:0.06, id:'ryan'};
+var bob = {rating:1400, rd:30, vol:0.06, id:'bob'};
+var john = {rating:1550, rd:100, vol:0.06, id:'john'};
+var mary = {rating:1700, rd:300, vol:0.06, id:'mary'};
+
+var match = ranking.addMatch(ryan, bob, 1);
+Ryan = match.pl1;
+ranking.addMatch(ryan, john, 0);
+ranking.addMatch(ryan, mary, 0);
+
+ranking.updateRatings();
+
+console.log("Ryan new rating: " + Ryan.getRating());
+```
+
+Get players list
+
+``` javascript
+var players = ranking.getPlayers();
+```
+
 ## Installation
 
 glicko2.js is available as a npm module.

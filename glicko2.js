@@ -134,6 +134,18 @@ function Glicko2(settings){
   this.players_index = 0;
 }
 
+Glicko2.prototype.getPlayers = function(){
+  var that = this;
+  var players = [];
+  var player;
+  Object.keys(that.players).forEach(function(key){
+      player = that.players[key];
+      player.id = key.slice(1);
+      players.push(player);
+    });
+  return players;
+};
+
 Glicko2.prototype.startPeriod = function(){
   for (var i = 0, len = this.players.length;i < len;i++){
     this.players[i].adv_ranks = [];
@@ -192,13 +204,11 @@ Glicko2.prototype.updateRatings = function(matches){
 
 Glicko2.prototype.makePlayer = function (rating, rd , vol, id){
   if (id === undefined){
-    id = this.players_index;
+    id = "a" + this.players_index;
     this.players_index = this.players_index + 1;
   }
   else {
-    if (typeof(id) === 'number'){
-      id = "a" + id;
-    }
+    id = "b" + id;
     //We check if the player has already been created
     var candidate = this.players[id];
     if (candidate !== undefined){
