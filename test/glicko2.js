@@ -42,6 +42,7 @@ describe('Glicko2', function(){
         var players = glicko.getPlayers();
         players.length.should.equal(3);
         players[1].id.should.equal("e");
+        players[1].getRating().should.equal(1400);
       });
   });
     describe('updateRatings()', function(){

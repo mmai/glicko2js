@@ -1,6 +1,4 @@
 test:
-	  mocha \
-    --require should \
-    --reporter list
+	npm test
 
 .PHONY: test

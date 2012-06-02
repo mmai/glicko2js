@@ -7,6 +7,10 @@
   "repository"      : {"type": "git", "url": "git://github.com/mmai/glicko2js.git"},
   "main"            : "./glicko2.js",
   "devDependencies" : {
-      "mocha": "0.14.x"
+      "mocha": "0.14.x",
+      "should": "0.6.x"
+    },
+  "scripts"         : {
+      "test": "mocha --require should --reporter list"
     }
 }
