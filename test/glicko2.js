@@ -93,6 +93,19 @@ describe('Glicko2', function(){
             (Math.abs(Ryan.getRd() - 151.52) < 0.01).should.be.true;
             (Math.abs(Ryan.getVol() - 0.05999) < 0.00001).should.be.true;
           });
+        it('should be able to update ratings when a player did not play', function(){
+          var settings = {
+              tau : 0.5,
+              rpd : 604800,
+              rating : 1500,
+              rd : 200,
+              vol : 0.06
+            };
+            var glicko = new glicko2.Glicko2(settings);
+            var Ryan = glicko.makePlayer();
+            var matches = [];
+            glicko.updateRatings(matches);
+          });
       });
     describe('addMatch()', function(){
         it('should add players and matches at the same time', function(){

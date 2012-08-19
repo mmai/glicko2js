@@ -39,6 +39,9 @@ Player.prototype._preRatingRD = function(){
 // Calculates the new rating and rating deviation of the player.
 // update_rank() -> None
 Player.prototype.update_rank = function(){
+  if (!this.hasPlayed()){
+    return;
+  }
   var rating_list = this.adv_ranks;
   var RD_list = this.adv_rds;
 
@@ -55,7 +58,10 @@ Player.prototype.update_rank = function(){
   this.__rating += Math.pow(this.__rd, 2) * tempSum;
 };
         
-        
+Player.prototype.hasPlayed = function(){
+  return this.outcomes.length > 0;
+};
+   
 // Calculating the new volatility as per the Glicko2 system.
 // _newVol(list, list, list) -> float
 Player.prototype._newVol = function( rating_list, RD_list, outcome_list, v){
