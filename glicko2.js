@@ -140,6 +140,11 @@ function Glicko2(settings){
   this.players_index = 0;
 }
 
+Glicko2.prototype.reset = function() {
+  this.players = [];
+  this.players_index = 0;
+};
+
 Glicko2.prototype.getPlayers = function(){
   var that = this;
   var players = [];
