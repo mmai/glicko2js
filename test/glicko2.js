@@ -6,7 +6,7 @@ describe('Glicko2', function(){
           tau : 0.5,
           rpd : 604800,
           rating : 1500,
-          rd : 200,
+          rd : 350,
           vol : 0.06
         };
         var glicko = new glicko2.Glicko2(settings);
