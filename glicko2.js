@@ -29,10 +29,18 @@ Player.prototype.setVol = function(vol){
   this.__vol = vol;
 };
 
+Player.prototype.addResult = function(opponent, outcome){
+  this.adv_ranks.push(opponent.__rating);
+  this.adv_rds.push(opponent.__rd);
+  this.outcomes.push(outcome);
+};
+
 // Calculates the new rating and rating deviation of the player.
 // Follows the steps of the algorithm described at http://www.glicko.net/glicko/glicko2.pdf
 Player.prototype.update_rank = function(){
   if (!this.hasPlayed()){
+    // Applies only the Step 6 of the algorithm
+    this._preRatingRD();
     return;
   }
   var rating_list = this.adv_ranks;
@@ -151,12 +159,6 @@ Player.prototype._makef = function(delta, v, a){
   };
 };
 
-// Applies Step 6 of the algorithm. Use this for players who did not compete in the rating period.
-// did_not_compete() -> None
-Player.prototype.did_not_compete = function(){
-  this._preRatingRD();
-};
-
 function Glicko2(settings){
   settings = settings || {
     tau : 0.5, // Internal glicko2 parameter. "Reasonable choices are between 0.3 and 1.2, though the system should be tested to decide which value results in greatest predictive accuracy."
@@ -190,7 +192,7 @@ Glicko2.prototype.getPlayers = function(){
   return players;
 };
 
-Glicko2.prototype.resetPlayers = function(){
+Glicko2.prototype.cleanPreviousMatches = function(){
   for (var i = 0, len = this.players.length;i < len;i++){
     this.players[i].adv_ranks = [];
     this.players[i].adv_rds = [];
@@ -248,18 +250,13 @@ Glicko2.prototype.makePlayer = function (rating, rd , vol, id){
  * @param {number} outcom The outcome : 0 = defeat, 1 = victory, 0.5 = draw
  */
 Glicko2.prototype.addResult = function(player1, player2, outcome){
-  player1.adv_ranks.push((player2.getRating() - 1500) / 173.7178);
-  player1.adv_rds.push(player2.getRd() / 173.7178);
-  player1.outcomes.push(outcome);
-
-  player2.adv_ranks.push((player1.getRating() - 1500) / 173.7178);
-  player2.adv_rds.push(player1.getRd() / 173.7178);
-  player2.outcomes.push(1 - outcome);
+  player1.addResult(player2, outcome);
+  player2.addResult(player1, 1 - outcome);
 };
 
-Glicko2.prototype.updateRatings = function(matches, absentPlayers){
+Glicko2.prototype.updateRatings = function(matches){
   if (typeof(matches) !== 'undefined'){
-    this.resetPlayers();
+    this.cleanPreviousMatches();
     for (var i=0, len = matches.length;i<len;i++){
       var match = matches[i];
       this.addResult(match[0], match[1], match[2]);
