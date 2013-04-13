@@ -8,7 +8,7 @@ build:
 	mkdir $(DIRNPM)
 	cp glicko2.js $(DIRNPM)
 	cp package.json $(DIRNPM)
-	cp README.md $(DIRNPM)
+	cp READMEnpm.md $(DIRNPM)/README.md
 	cp -R test $(DIRNPM)
 
 publish: build
