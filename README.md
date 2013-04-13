@@ -67,7 +67,7 @@ You should not update the ranking after each match.
 The typical use of glicko is to calculate the ratings after each tournament (ie collection of matches in a period of time).
 A player rating will evolve after a tournament has finished, but not during the tournament. 
 
-As for number of matches in a tournament or rating period, here is what says Mark E. Glickman (cf. http://www.glicko.net/glicko/glicko2.pdf ) :
+Here is what says Mark E. Glickman about the number of matches in a tournament or rating period (cf. http://www.glicko.net/glicko/glicko2.pdf ) :
 > The Glicko-2 system works best when the number of games in a rating period is moderate to large, say an average of at least 10-15 games per player in a rating period.
 
 ## Installation

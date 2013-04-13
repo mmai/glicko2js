@@ -89,8 +89,8 @@ describe('Glicko2', function(){
 
             glicko.updateRatings(matches);
 
-            (Math.abs(Ryan.getRating() - 1464.06) < 0.01).should.be.true;
-            (Math.abs(Ryan.getRd() - 151.52) < 0.01).should.be.true;
+            (Math.abs(Ryan.getRating() - 1464) < 0.1).should.be.true;
+            (Math.abs(Ryan.getRd() - 152) < 0.1).should.be.true;
             (Math.abs(Ryan.getVol() - 0.05999) < 0.00001).should.be.true;
           });
         it('should be able to update ratings when a player did not play', function(){
@@ -134,8 +134,8 @@ describe('Glicko2', function(){
 
             Object.keys(glicko.players).length.should.equal(4);
             Ryan.outcomes.length.should.equal(3);
-            (Math.abs(Ryan.getRating() - 1464.06) < 0.01).should.be.true;
-            (Math.abs(Ryan.getRd() - 151.52) < 0.01).should.be.true;
+            (Math.abs(Ryan.getRating() - 1464) < 0.01).should.be.true;
+            (Math.abs(Ryan.getRd() - 152) < 0.01).should.be.true;
             (Math.abs(Ryan.getVol() - 0.05999) < 0.00001).should.be.true;
           });
       });
