@@ -7,10 +7,21 @@ Each player begins with a rating, a rating deviation (accuracy of the rating) an
 
 ## Usage
 
-First we initiate a ranking manager and create players with initial ratings, rating deviations and volatilities.
+In the browser, you need to include the glicko2.js file :
+
+``` html
+<script src="glicko2.js"></script>
+```
+
+In node.js, just require the module :
 
 ``` javascript
 var glicko2 = require('glicko2');
+```
+
+First we initiate a ranking manager and create players with initial ratings, rating deviations and volatilities.
+
+``` javascript
 var settings = {
   tau : 0.5, // "Reasonable choices are between 0.3 and 1.2, though the system should be tested to decide which value results in greatest predictive accuracy."
   rating : 1500, //default rating
@@ -26,7 +37,7 @@ var John = ranking.makePlayer(1550, 100, 0.06);
 var Mary = ranking.makePlayer(1700, 300, 0.06);
 ```
 
-We can then enter results, calculate the new ratings
+We can then enter results, calculate the new ratings...
 
 ``` javascript
 var matches = [];
@@ -44,31 +55,33 @@ console.log("Ryan new rating deviation: " + Ryan.getRd());
 console.log("Ryan new volatility: " + Ryan.getVol());
 ```
 
-Or you can add matches and players at the same time :
-
-``` javascript
-var ryan = {rating:1500, rd:200, vol:0.06, id:'ryan'};
-var bob = {rating:1400, rd:30, vol:0.06, id:'bob'};
-var john = {rating:1550, rd:100, vol:0.06, id:'john'};
-var mary = {rating:1700, rd:300, vol:0.06, id:'mary'};
-
-var match = ranking.addMatch(ryan, bob, 1);
-Ryan = match.pl1;
-ranking.addMatch(ryan, john, 0);
-ranking.addMatch(ryan, mary, 0);
-
-ranking.updateRatings();
-
-console.log("Ryan new rating: " + Ryan.getRating());
-```
-
 Get players list
 
 ``` javascript
 var players = ranking.getPlayers();
 ```
 
+## When to update rankings
+
+You should not update the ranking after each match.
+The typical use of glicko is to calculate the ratings after each tournament (ie collection of matches in a period of time).
+A player rating will evolve after a tournament has finished, but not during the tournament. 
+
+As for number of matches in a tournament or rating period, here is what says Mark E. Glickman (cf. http://www.glicko.net/glicko/glicko2.pdf ) :
+> The Glicko-2 system works best when the number of games in a rating period is moderate to large, say an average of at least 10-15 games per player in a rating period.
+
 ## Installation
+
+### In the browser
+
+You just need to include the glicko2.js script.
+See index.html in the example folder.
+
+``` html
+<script src="glicko2.js"></script>
+```
+
+### As a node.js module
 
 glicko2.js is available as a npm module.
 
@@ -77,3 +90,7 @@ Install globally with:
 ``` shell
 $ npm install -g glicko2
 ```
+
+## They use Glicko2js
+
+* [Nodewar](http://www.nodewar.com), a programming game for the browser

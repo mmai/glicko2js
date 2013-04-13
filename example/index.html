@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="../glicko2.js"></script>
+
+        <script type="text/javascript">
+            var settings = {
+              tau : 0.5,
+              rpd : 604800,
+              rating : 1500,
+              rd : 300,
+              vol : 0.06
+            };
+            var glicko = new glicko2.Glicko2(settings);
+
+            //Make players
+            Ryan = glicko.makePlayer(); //use default values
+            Mary = glicko.makePlayer(1700, 300, 0.06);
+            Bob = glicko.makePlayer(1400, 30, 0.06);
+            John = glicko.makePlayer(1550, 100, 0.06);
+            Gaspard = glicko.makePlayer();
+            Hector = glicko.makePlayer();
+
+            var players = [
+                { name:'Ryan', glicko: Ryan },
+                { name:'Mary', glicko: Mary },
+                { name:'Bob', glicko: Bob },
+                { name:'John', glicko: John },
+                { name:'Gaspard', glicko: Gaspard },
+                { name:'Hector', glicko: Hector }
+            ];
+
+            function showRankings(){
+                //Sort players
+                players.sort(function(pl1, pl2){ return pl2.glicko.getRating() - pl1.glicko.getRating(); });
+
+                //Display ratings
+                for (var i=0,len= players.length;i<len;i++){
+                    player = players[i];
+                    document.write(player.name + ' : ' + player.glicko.getRating() + ' (rd : ' + player.glicko.getRd() + ')<br>');
+                }
+            }
+       </script>
+    </head>
+
+    <body>
+        <h2>Initial rankings</h2>
+        <script>
+            showRankings();
+        </script>
+
+        <h2>Rankings after tournament 1</h2>
+        <script>
+            var matches = [];
+            matches.push([Ryan, Bob, 1]); //Ryan won over Bob
+            matches.push([Ryan, John, 0]); //Ryan lost against John
+            matches.push([Ryan, Mary, 0]); //Ryan lost against Mary
+
+            glicko.updateRatings(matches);
+            showRankings();
+        </script>
+
+        <h2>Rankings after tournament 2</h2>
+        <script>
+            var matches = [];
+            matches.push([Ryan, Gaspard, 1]); 
+            matches.push([Hector, Bob, 0]); 
+            matches.push([John, Mary, 0]);
+            matches.push([John, Ryan, 0]);
+            matches.push([Gaspard, Mary, 0]);
+            matches.push([Mary, John, 0]);
+            glicko.updateRatings(matches);
+            showRankings();
+        </script>
+     </body>
+</html>
