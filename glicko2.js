@@ -8,11 +8,11 @@
     }
 
     Player.prototype.getRating = function (){
-      return Math.round(this.__rating * 173.7178) + 1500;
+      return Math.round(this.__rating * 173.7178) + this.defaultRating;
     };
 
     Player.prototype.setRating = function (rating){
-      this.__rating = (rating - 1500) / 173.7178;
+      this.__rating = (rating - this.defaultRating) / 173.7178;
     };
 
     Player.prototype.getRd = function(){
@@ -168,6 +168,7 @@
         rd : 350, //Default rating deviation (small number = good confidence on the rating accuracy)
         vol : 0.06 //Default volatility (expected fluctation on the player rating)
       };
+      Player.prototype.defaultRating = settings.rating;
 
       this._tau = settings.tau;
       this._default_rating = settings.rating;
