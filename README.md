@@ -1,5 +1,8 @@
 # Glicko 2 javascript implementation
 
+[![Build Status](https://travis-ci.org/mmai/glicko2js.png)](https://travis-ci.org/mmai/glicko2js)
+
+
 The Glicko-2 rating system is a method for assessing a player's strength in games of skill, such as chess and go.
 The algorithm is explained by its author, Mark E. Glickman, on http://glicko.net/glicko.html.
 
