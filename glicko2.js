@@ -184,15 +184,7 @@
     };
 
     Glicko2.prototype.getPlayers = function(){
-      var that = this;
-      var players = [];
-      var player;
-      Object.keys(that.players).forEach(function(key){
-          player = that.players[key];
-          player.id = key.slice(1);
-          players.push(player);
-        });
-      return players;
+      return this.players;
     };
 
     Glicko2.prototype.cleanPreviousMatches = function(){
@@ -218,27 +210,31 @@
      * @param {number} outcom The outcome : 0 = defeat, 1 = victory, 0.5 = draw
      */
     Glicko2.prototype.addMatch = function(player1, player2, outcome){
-      var pl1 = this.makePlayer(player1.rating, player1.rd, player1.vol, player1.id);
-      var pl2 = this.makePlayer(player2.rating, player2.rd, player2.vol, player2.id);
+      var pl1 = this._createInternalPlayer(player1.rating, player1.rd, player1.vol, player1.id);
+      var pl2 = this._createInternalPlayer(player2.rating, player2.rd, player2.vol, player2.id);
       this.addResult(pl1, pl2, outcome);
       return {pl1:pl1, pl2:pl2};
     };
 
-    Glicko2.prototype.makePlayer = function (rating, rd , vol, id){
+    Glicko2.prototype.makePlayer = function (rating, rd , vol) {
+      //We do not expose directly createInternalPlayer in order to prevent the assignation of a custom player id whose uniqueness could not be guaranteed
+      return this._createInternalPlayer(rating, rd, vol);
+    };
+
+    Glicko2.prototype._createInternalPlayer = function (rating, rd , vol, id){
       if (id === undefined){
-        id = "a" + this.players_index;
+        id = this.players_index;
         this.players_index = this.players_index + 1;
       }
       else {
-        id = "b" + id;
         //We check if the player has already been created
         var candidate = this.players[id];
         if (candidate !== undefined){
           return candidate;
         }
       }
-
       var player = new Player(rating || this._default_rating, rd || this._default_rd, vol || this._default_vol, this._tau);
+      player.id = id;
       player.adv_ranks = [];
       player.adv_rds = [];
       player.outcomes = [];
