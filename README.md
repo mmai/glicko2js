@@ -1,6 +1,7 @@
 # Glicko 2 javascript implementation
 
 [![Build Status](https://travis-ci.org/mmai/glicko2js.png)](https://travis-ci.org/mmai/glicko2js)
+[![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=rhumbs&url=https://github.com/mmai/glicko2js&title=glicko2js&language=&tags=github&category=software)
 
 
 The Glicko-2 rating system is a method for assessing a player's strength in games of skill, such as chess and go.
