@@ -81,7 +81,7 @@ describe('Glicko2', function(){
             glicko.updateRatings(matches);
 
             (Math.abs(Ryan.getRating() - 1464) < 0.1).should.be.true;
-            (Math.abs(Ryan.getRd() - 152) < 0.1).should.be.true;
+            (Math.abs(Ryan.getRd() - 151.52) < 0.01).should.be.true;
             (Math.abs(Ryan.getVol() - 0.05999) < 0.00001).should.be.true;
           });
         it('should allow to be called multiple times', function(){
