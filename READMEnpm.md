@@ -17,7 +17,8 @@ var settings = {
   tau : 0.5,
   // rating : default rating
   rating : 1500,
-  //rd : Default rating deviation (small number = good confidence on the rating accuracy)
+  //rd : Default rating deviation
+  //     small number = good confidence on the rating accuracy
   rd : 200,
   //vol : Default volatility (expected fluctation on the player rating)
   vol : 0.06
@@ -75,7 +76,3 @@ Install globally with:
 ``` shell
 $ npm install -g glicko2
 ```
-
-## Projects using Glicko2js
-
-* [Nodewar](http://www.nodewar.com), a programming game for the browser

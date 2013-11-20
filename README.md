@@ -28,11 +28,12 @@ First we initiate a ranking manager and create players with initial ratings, rat
 ``` javascript
 var settings = {
   // tau : "Reasonable choices are between 0.3 and 1.2, though the system should
-  //       be tested to decide which value results in greatest predictive accuracy."
+  //      be tested to decide which value results in greatest predictive accuracy."
   tau : 0.5,
   // rating : default rating
   rating : 1500,
-  //rd : Default rating deviation (small number = good confidence on the rating accuracy)
+  //rd : Default rating deviation 
+  //     small number = good confidence on the rating accuracy
   rd : 200,
   //vol : Default volatility (expected fluctation on the player rating)
   vol : 0.06
@@ -90,6 +91,12 @@ See index.html in the example folder.
 <script src="glicko2.js"></script>
 ```
 
+### With [bower(http://bower.io/)]
+
+``` shell
+$ bower install glicko2
+```
+
 ### As a node.js module
 
 glicko2.js is available as a npm module.
@@ -100,6 +107,3 @@ Install globally with:
 $ npm install -g glicko2
 ```
 
-## Projects using Glicko2js
-
-* [Nodewar](http://www.nodewar.com), a programming game for the browser
