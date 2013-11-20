@@ -1,0 +1,26 @@
+{
+  "name": "glicko2",
+  "version": "0.7.0",
+  "homepage": "https://github.com/mmai/glicko2js",
+  "authors": [
+    "Henri Bourcereau <henri.bourcereau@gmail.com>"
+  ],
+  "description": "glicko2 ranking system",
+  "main": "./glicko2.js",
+  "keywords": [
+    "glicko",
+    "utilities",
+    "ranking"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "example",
+    "node_modules",
+    "test",
+    "toNPM",
+    "Makefile",
+    "package.json",
+    "READMEnpm.md"
+  ]
+}
