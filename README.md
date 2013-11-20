@@ -91,7 +91,7 @@ See index.html in the example folder.
 <script src="glicko2.js"></script>
 ```
 
-### With [bower(http://bower.io/)]
+### With [bower](http://bower.io/)
 
 ``` shell
 $ bower install glicko2
