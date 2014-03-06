@@ -1,5 +1,9 @@
 # Glicko 2 javascript implementation
 
+[![Build Status](https://travis-ci.org/mmai/glicko2js.png)](https://travis-ci.org/mmai/glicko2js)
+[![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=rhumbs&url=https://github.com/mmai/glicko2js&title=glicko2js&language=&tags=github&category=software)
+
+
 The Glicko-2 rating system is a method for assessing a player's strength in games of skill, such as chess and go.
 The algorithm is explained by its author, Mark E. Glickman, on http://glicko.net/glicko.html.
 
@@ -66,13 +70,3 @@ You can see a client side javascript example using tournaments here : https://gi
 
 Here is what says Mark E. Glickman about the number of matches in a tournament or rating period (cf. http://www.glicko.net/glicko/glicko2.pdf ) :
 > The Glicko-2 system works best when the number of games in a rating period is moderate to large, say an average of at least 10-15 games per player in a rating period.
-
-## Installation
-
-glicko2.js is available as a npm module.
-
-Install globally with:
-
-``` shell
-$ npm install -g glicko2
-```

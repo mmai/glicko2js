@@ -96,14 +96,17 @@ See index.html in the example folder.
 ``` shell
 $ bower install glicko2
 ```
+``` html
+<script src="bower_components/glicko2/glicko2.js"></script>
+```
 
 ### As a node.js module
 
 glicko2.js is available as a npm module.
 
-Install globally with:
+Install with:
 
 ``` shell
-$ npm install -g glicko2
+$ npm install glicko2
 ```
 
