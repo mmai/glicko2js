@@ -118,7 +118,7 @@ describe('Glicko2', function(){
             matches.push([Ryan, John, 1]);
             matches.push([Mary, Bob, 1]);
             glicko.updateRatings(matches);
-            console.log('nb players: ' + glicko.getPlayers().length);
+            //console.log('nb players: ' + glicko.getPlayers().length);
 
             //Fist tournament for the second ranking instance, with the same matches
             var matches_new = [];
