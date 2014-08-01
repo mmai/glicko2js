@@ -125,21 +125,30 @@
 
     //=========================  Glicko2 class =============================================
     function Glicko2(settings){
-        default_settings = {
-            tau : 0.5, // Internal glicko2 parameter. "Reasonable choices are between 0.3 and 1.2, though the system should be tested to decide which value results in greatest predictive accuracy."
-            rating : 1500, //default rating
-            rd : 350, //Default rating deviation (small number = good confidence on the rating accuracy)
-            vol : 0.06, //Default volatility (expected fluctation on the player rating)
-            volatility_algorithm : 'newprocedure' //Default volatility calculation algorithm (step 5 of the global algorithm)
-        };
-        settings = settings || default_settings;
-        Player.prototype.defaultRating = settings.rating;
-        Player.prototype.volatility_algorithm = volatility_algorithms[settings.volatility_algorithm || default_settings.volatility_algorithm];
+        settings = settings || {};
 
-        this._tau = settings.tau;
-        this._default_rating = settings.rating;
-        this._default_rd = settings.rd;
-        this._default_vol = settings.vol;
+        // Default rating
+        Player.prototype.defaultRating = settings.rating || 1500;
+
+        // Defualt volatility calculation algorithm (step 5 of the global
+        // algorithm)
+        Player.prototype.volatility_algorithm = volatility_algorithms[settings.volatility_algorithm || 'newprocedure'];
+
+        // Internal glicko2 paramter. "Reasonable choices are between 0.3 and
+        // 1.2, though the system should be tested to decide which value results
+        // in greatest predictive accuracy."
+        this._tau = settings.tau || 0.5;
+
+        // Default rating
+        this._default_rating = settings.rating || 1500;
+
+        // Default rating deviation (small number = good confidence on the
+        // rating accuracy)
+        this._default_rd = settings.rd || 350;
+
+        // Default volatility (expected fluctation on the player rating)
+        this._default_vol = settings.vol || 0.06;
+
         this.players = [];
         this.players_index = 0;
     }
