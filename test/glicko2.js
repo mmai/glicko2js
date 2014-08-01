@@ -9,7 +9,7 @@ describe('Glicko2', function(){
             player.getRd().should.equal(350);
             player.getVol().should.equal(0.06);
         });
-        it('should support setting invidual settings', function(){
+        it('should support setting individual settings', function(){
             var glicko = new glicko2.Glicko2({
               rating: 1600
             });
@@ -17,6 +17,18 @@ describe('Glicko2', function(){
             player.getRating().should.equal(1600);
             player.getRd().should.equal(350);
             player.getVol().should.equal(0.06);
+        });
+        it('should not be affected by newer instances of Glicko2', function(){
+            var glicko = new glicko2.Glicko2({
+              rating: 1400
+            });
+            var player = glicko.makePlayer();
+
+            var newerGlicko = new glicko2.Glicko2({
+              rating: 1600
+            });
+
+            player.getRating().should.equal(1400);
         });
     });
     describe('getPlayers()', function(){
