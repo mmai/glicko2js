@@ -2,21 +2,23 @@ var glicko2 = require('../glicko2');
 
 describe('Glicko2', function(){
     describe('makePlayer()', function(){
-        var settings = {
-          tau : 0.5,
-          rpd : 604800,
-          rating : 1500,
-          rd : 350,
-          vol : 0.06
-        };
-        var glicko = new glicko2.Glicko2(settings);
-        it('should make a default player', function(){
+        it('should make a default player when passed no settings', function(){
+            var glicko = new glicko2.Glicko2();
             var player = glicko.makePlayer();
-            player.getRating().should.equal(settings.rating);
-            player.getRd().should.equal(settings.rd);
-            player.getVol().should.equal(settings.vol);
-          });
-      });
+            player.getRating().should.equal(1500);
+            player.getRd().should.equal(350);
+            player.getVol().should.equal(0.06);
+        });
+        it('should support setting invidual settings', function(){
+            var glicko = new glicko2.Glicko2({
+              rating: 1600
+            });
+            var player = glicko.makePlayer();
+            player.getRating().should.equal(1600);
+            player.getRd().should.equal(350);
+            player.getVol().should.equal(0.06);
+        });
+    });
     describe('getPlayers()', function(){
         it('should retrieve all players with ids', function(){
         var settings = {
