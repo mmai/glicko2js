@@ -127,14 +127,7 @@
     function Glicko2(settings){
         settings = settings || {};
 
-        // Default rating
-        Player.prototype.defaultRating = settings.rating || 1500;
-
-        // Defualt volatility calculation algorithm (step 5 of the global
-        // algorithm)
-        Player.prototype.volatility_algorithm = volatility_algorithms[settings.volatility_algorithm || 'newprocedure'];
-
-        // Internal glicko2 paramter. "Reasonable choices are between 0.3 and
+        // Internal glicko2 parameter. "Reasonable choices are between 0.3 and
         // 1.2, though the system should be tested to decide which value results
         // in greatest predictive accuracy."
         this._tau = settings.tau || 0.5;
@@ -148,6 +141,10 @@
 
         // Default volatility (expected fluctation on the player rating)
         this._default_vol = settings.vol || 0.06;
+
+        // Default volatility calculation algorithm (step 5 of the global
+        // algorithm)
+        this._volatility_algorithm = volatility_algorithms[settings.volatility_algorithm || 'newprocedure'];
 
         this.players = [];
         this.players_index = 0;
@@ -208,6 +205,23 @@
               }
           }
           var player = new Player(rating || this._default_rating, rd || this._default_rd, vol || this._default_vol, this._tau);
+          var playerProto = Object.getPrototypeOf(player);
+
+          // Set this specific Player's `defaultRating`. This _has_ to be done
+          // here in order to ensure that new `Glicko2` instances do not change
+          // the `defaultRating` of `Player` instances created under previous
+          // `Glicko2` instances.
+          playerProto.defaultRating = this._default_rating;
+
+          // Same reasoning and purpose as the above code regarding
+          // `defaultRating`
+          playerProto.volatility_algorithm = this._volatility_algorithm;
+
+          // Since this `Player`'s rating was calculated upon instantiation,
+          // before the `defaultRating` was defined above, we much re-calculate
+          // the rating manually.
+          player.setRating(rating || this._default_rating);
+
           player.id = id;
           player.adv_ranks = [];
           player.adv_rds = [];
