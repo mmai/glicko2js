@@ -101,6 +101,7 @@ You can also update ratings for one race without converting to matches :
 
 ```javascript
 ranking.updateRatings(race1);
+```
 
 ## When to update rankings
 
