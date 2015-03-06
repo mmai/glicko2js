@@ -65,12 +65,33 @@
             var matches = [];
             matches.push([Ryan, Gaspard, 1]); 
             matches.push([Hector, Bob, 0]); 
-            matches.push([John, Mary, 0]);
+            matches.push([John, Mary, 0.5]);
             matches.push([John, Ryan, 0]);
-            matches.push([Gaspard, Mary, 0]);
+            matches.push([Gaspard, Mary, 0.5]);
             matches.push([Mary, John, 0]);
             glicko.updateRatings(matches);
             showRankings();
         </script>
+
+        <h2>Rankings after two races</h2>
+        <script>
+            var matches = [];
+            var race1 = glicko.makeRace([
+                    [Ryan],
+                    [John],
+                    [Mary]
+            ]);
+            var race2 = glicko.makeRace([
+                [Gaspard],
+                [John, Bob],
+                [Hector]
+            ]);
+
+            matches = matches.concat(race1.getMatches());
+            matches = matches.concat(race2.getMatches());
+            glicko.updateRatings(matches);
+            showRankings();
+        </script>
+
      </body>
 </html>

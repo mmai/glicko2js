@@ -159,6 +159,72 @@ describe('Glicko2', function(){
             var matches = [];
             glicko.updateRatings(matches);
           });
+        it('should accept Race objects', function(){
+            var settings = {
+                tau : 0.5,
+                rpd : 604800,
+                rating : 1500,
+                rd : 200,
+                vol : 0.06
+            };
+            var glicko = new glicko2.Glicko2(settings);
+            var Ryan = glicko.makePlayer();
+            var Bob = glicko.makePlayer(1400, 30, 0.06);
+            var John = glicko.makePlayer(1550, 100, 0.06);
+            var Mary = glicko.makePlayer(1700, 300, 0.06);
+
+            var race = glicko.makeRace(
+                [
+                    [Ryan], //Ryan won the race
+                    [Bob, John], //Bob and John 2nd position ex-aequo
+                    [Mary] // Mary 4th position
+                ]
+            );
+
+            glicko.updateRatings(race);
+
+            (Math.abs(Ryan.getRating() - 1686) < 0.1).should.be.true;
+            (Math.abs(Ryan.getRd() - 151.52) < 0.01).should.be.true;
+            (Math.abs(Ryan.getVol() - 0.06000) < 0.00001).should.be.true;
+        });
       });
   });
+
+describe("Race", function(){
+    describe("getMatches", function(){
+        it("Should convert a race to a list of matches", function(){
+            var settings = {
+                tau : 0.5,
+                rpd : 604800,
+                rating : 1500,
+                rd : 200,
+                vol : 0.06
+            };
+            var glicko = new glicko2.Glicko2(settings);
+            var Ryan = glicko.makePlayer();
+            var Bob = glicko.makePlayer(1400, 30, 0.06);
+            var John = glicko.makePlayer(1550, 100, 0.06);
+            var Mary = glicko.makePlayer(1700, 300, 0.06);
+
+            var race = glicko.makeRace(
+                [
+                    [Ryan], //Ryan won the race
+                    [Bob, John], //Bob and John 2nd position ex-aequo
+                    [Mary] // Mary 4th position
+                ]
+            );
+
+            var matches = race.getMatches();
+            matches.should.eql([
+                [Ryan, Bob, 1],
+                [Ryan, John, 1],
+                [Ryan, Mary, 1],
+                [Bob, John, 0.5],
+                [Bob, Mary, 1],
+                [John, Mary, 1]
+            ]);
+        })
+    })
+
+})
 

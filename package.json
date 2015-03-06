@@ -1,14 +1,14 @@
 {
   "name"            : "glicko2",
   "description"     : "glicko2 ranking system",
-  "version"         : "0.7.4",
+  "version"         : "0.8.0",
   "author"          : "Henri Bourcereau",
   "keywords"        : ["glicko", "utilities", "ranking"],
   "repository"      : {"type": "git", "url": "git://github.com/mmai/glicko2js.git"},
   "main"            : "./glicko2.js",
   "devDependencies" : {
-      "mocha": "0.14.x",
-      "should": "0.6.x"
+      "mocha": "2.1.x",
+      "should": "5.1.x"
     },
   "scripts"         : {
       "test": "mocha --require should --reporter list"

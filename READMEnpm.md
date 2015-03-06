@@ -60,6 +60,48 @@ Get players list
 var players = ranking.getPlayers();
 ```
 
+### Support for multiple competitors matches
+
+You can easily enter results from games where multiple competitors play against each other at the same time (ie swimming, racing...).
+
+First make "Race" objects by entering the results in an array of "positions", where each position is an array of players at this position :
+
+```javascript
+var race1 = glicko.makeRace(
+    [
+        [Ryan], //Ryan won the race
+        [Bob, John], //Bob and John ended ex aequo at the 2nd position
+        [Mary] // Mary 4th position
+    ]
+);
+
+var race2 = glicko.makeRace(
+    [
+        [Mary], // won
+        [Bob],  // 2nd
+        [John], // 3rd
+        [Ryan], // 4th
+    ]
+);
+
+```
+
+Then convert the races to the equivalent matches :
+```javascript
+
+var matches1 = race1.getMatches();
+var matches2 = race2.getMatches();
+
+var allMatches = matches1.concat(matches2)
+
+ranking.updateRatings(allMatches);
+```
+
+You can also update ratings for one race without converting to matches :
+
+```javascript
+ranking.updateRatings(race1);
+
 ## When to update rankings
 
 You should not update the ranking after each match.
