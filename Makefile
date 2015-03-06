@@ -12,6 +12,8 @@ build:
 	cp -R test $(DIRNPM)
 
 publish: build
-	npm publish $(DIRNPM)
+	cd $(DIRNPM)
+	npm publish .
+	cd ..
 
 .PHONY: test
