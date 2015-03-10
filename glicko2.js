@@ -49,7 +49,7 @@
     };
 
     Player.prototype.getRd = function(){
-        return Math.round(100 * this.__rd * scalingFactor)/100;
+        return this.__rd * scalingFactor;
     };
 
     Player.prototype.setRd = function(rd){
