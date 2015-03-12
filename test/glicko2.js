@@ -183,7 +183,7 @@ describe('Glicko2', function(){
 
             glicko.updateRatings(race);
 
-            (Math.abs(Ryan.getRating() - 1686) < 0.1).should.be.true;
+            (Math.abs(Ryan.getRating() - 1685.7) < 0.1).should.be.true;
             (Math.abs(Ryan.getRd() - 151.52) < 0.01).should.be.true;
             (Math.abs(Ryan.getVol() - 0.06000) < 0.00001).should.be.true;
         });

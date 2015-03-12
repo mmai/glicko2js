@@ -41,7 +41,7 @@
     }
 
     Player.prototype.getRating = function (){
-        return Math.round(this.__rating * scalingFactor) + this.defaultRating;
+        return this.__rating * scalingFactor + this.defaultRating;
     };
 
     Player.prototype.setRating = function (rating){
