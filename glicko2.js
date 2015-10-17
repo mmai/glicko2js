@@ -280,7 +280,7 @@
             if(matches instanceof Race){
                 matches = matches.getMatches();
             }
-            if (typeof(matches) !== 'undetypeof(matches)fined'){
+            if (typeof(matches) !== 'undefined'){
                 this.cleanPreviousMatches();
                 for (var i=0, len = matches.length;i<len;i++){
                     var match = matches[i];
