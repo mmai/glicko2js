@@ -1,7 +1,6 @@
 # Glicko 2 javascript implementation
 
 [![Build Status](https://travis-ci.org/mmai/glicko2js.png)](https://travis-ci.org/mmai/glicko2js)
-[![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=rhumbs&url=https://github.com/mmai/glicko2js&title=glicko2js&language=&tags=github&category=software)
 
 
 The Glicko-2 rating system is a method for assessing a player's strength in games of skill, such as chess and go.
@@ -60,9 +59,22 @@ Get players list
 var players = ranking.getPlayers();
 ```
 
-### Support for multiple competitors matches
+## When to update rankings
 
-You can easily enter results from games where multiple competitors play against each other at the same time (ie swimming, racing...).
+You should not update the ranking after each match.
+The typical use of glicko is to calculate the ratings after each tournament (ie collection of matches in a period of time).
+A player rating will evolve after a tournament has finished, but not during the tournament. 
+
+You can see a client side javascript example using tournaments here : https://github.com/mmai/glicko2js/blob/master/example/index.html
+
+Here is what says Mark E. Glickman about the number of matches in a tournament or rating period (cf. http://www.glicko.net/glicko/glicko2.pdf ) :
+> The Glicko-2 system works best when the number of games in a rating period is moderate to large, say an average of at least 10-15 games per player in a rating period.
+
+### Support for multiple competitors matches (experimental)
+
+**Note: the glicko2 algorithm was not designed for multiple competitors matches, this is a naive workaround whose results should be taken whith caution.** 
+
+You can enter results from games where multiple competitors play against each other at the same time (ie swimming, racing...).
 
 First make "Race" objects by entering the results in an array of "positions", where each position is an array of players at this position :
 
@@ -103,13 +115,3 @@ You can also update ratings for one race without converting to matches :
 ranking.updateRatings(race1);
 ```
 
-## When to update rankings
-
-You should not update the ranking after each match.
-The typical use of glicko is to calculate the ratings after each tournament (ie collection of matches in a period of time).
-A player rating will evolve after a tournament has finished, but not during the tournament. 
-
-You can see a client side javascript example using tournaments here : https://github.com/mmai/glicko2js/blob/master/example/index.html
-
-Here is what says Mark E. Glickman about the number of matches in a tournament or rating period (cf. http://www.glicko.net/glicko/glicko2.pdf ) :
-> The Glicko-2 system works best when the number of games in a rating period is moderate to large, say an average of at least 10-15 games per player in a rating period.
