@@ -1,16 +1,23 @@
 {
-  "name"            : "glicko2",
-  "description"     : "glicko2 ranking system",
-  "version"         : "0.8.5",
-  "author"          : "Henri Bourcereau",
-  "keywords"        : ["glicko", "utilities", "ranking"],
-  "repository"      : {"type": "git", "url": "git://github.com/mmai/glicko2js.git"},
-  "main"            : "./glicko2.js",
-  "devDependencies" : {
-      "mocha": "2.1.x",
-      "should": "5.1.x"
-    },
-  "scripts"         : {
-      "test": "mocha --require should --reporter list"
-    }
+  "name": "glicko2",
+  "description": "glicko2 ranking system",
+  "version": "0.8.6",
+  "author": "Henri Bourcereau",
+  "keywords": [
+    "glicko",
+    "utilities",
+    "ranking"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mmai/glicko2js.git"
+  },
+  "main": "./glicko2.js",
+  "devDependencies": {
+    "mocha": "8.2.x",
+    "should": "13.2.x"
+  },
+  "scripts": {
+    "test": "mocha --require should --reporter list"
+  }
 }
