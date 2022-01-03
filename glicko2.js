@@ -41,7 +41,7 @@
     }
 
     Player.prototype.getRating = function (){
-        return this.__rating * scalingFactor + this.defaultRating;
+        return (this.__rating - 2*this.__rd) * scalingFactor + this.defaultRating + 2*this.defaultRD;
     };
 
     Player.prototype.setRating = function (rating){
@@ -95,7 +95,9 @@
         this._preRatingRD();
 
         //Step 7
+        // Glicko max RD is 350
         this.__rd = 1 / Math.sqrt((1 / Math.pow(this.__rd, 2)) + (1 / v));
+        this.__rd = Math.min(this.__rd, 350/scalingFactor);
 
         var tempSum = 0;
         for (var i=0,len = this.adv_ranks.length;i< len;i++){
@@ -114,6 +116,7 @@
     // preRatingRD() -> None
     Player.prototype._preRatingRD = function(){
         this.__rd = Math.sqrt(Math.pow(this.__rd, 2) + Math.pow(this.__vol, 2));
+        this.__rd = Math.min(this.__rd, 350/scalingFactor);
     };
 
 
@@ -247,6 +250,7 @@
           // the `defaultRating` of `Player` instances created under previous
           // `Glicko2` instances.
           playerProto.defaultRating = this._default_rating;
+          playerProto.defaultRD = this._default_rd;
 
           // Same reasoning and purpose as the above code regarding
           // `defaultRating`
