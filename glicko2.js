@@ -32,12 +32,19 @@
         return computeMatches(players)
     }
 
-    function Player(rating, rd , vol, tau){
+    function Player(rating, rd, vol, tau, default_rating, volatility_algorithm, id) {
         this._tau = tau; 
+        this.defaultRating = default_rating;
+        this.volatility_algorithm = volatility_algorithm;
 
         this.setRating(rating);
         this.setRd(rd);
         this.setVol(vol);
+
+        this.id = id
+        this.adv_ranks = [];
+        this.adv_rds = [];
+        this.outcomes = [];
     }
 
     Player.prototype.getRating = function (){
@@ -239,28 +246,9 @@
                   return candidate;
               }
           }
-          var player = new Player(rating || this._default_rating, rd || this._default_rd, vol || this._default_vol, this._tau);
-          var playerProto = Object.getPrototypeOf(player);
+          var player = new Player(rating || this._default_rating, rd || this._default_rd, vol || this._default_vol,
+                                  this._tau, this._default_rating, this._volatility_algorithm, id);
 
-          // Set this specific Player's `defaultRating`. This _has_ to be done
-          // here in order to ensure that new `Glicko2` instances do not change
-          // the `defaultRating` of `Player` instances created under previous
-          // `Glicko2` instances.
-          playerProto.defaultRating = this._default_rating;
-
-          // Same reasoning and purpose as the above code regarding
-          // `defaultRating`
-          playerProto.volatility_algorithm = this._volatility_algorithm;
-
-          // Since this `Player`'s rating was calculated upon instantiation,
-          // before the `defaultRating` was defined above, we much re-calculate
-          // the rating manually.
-          player.setRating(rating || this._default_rating);
-
-          player.id = id;
-          player.adv_ranks = [];
-          player.adv_rds = [];
-          player.outcomes = [];
           this.players[id] = player;
           return player;
       };
