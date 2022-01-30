@@ -1,7 +1,7 @@
 {
   "name": "glicko2",
   "description": "glicko2 ranking system",
-  "version": "0.8.6",
+  "version": "0.8.7",
   "author": "Henri Bourcereau",
   "keywords": [
     "glicko",
