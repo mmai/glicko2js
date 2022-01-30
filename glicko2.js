@@ -327,7 +327,7 @@
 
                 //
                 function new_sigma(sigma , phi , v , delta , tau ) {
-                    var a = Math.Math.log(Math.pow(sigma, 2));
+                    var a = Math.log(Math.pow(sigma, 2));
                     var x = a;
                     var old_x = 0;
                     while (x != old_x){
@@ -347,7 +347,7 @@
 
                 function new_sigma_bisection(sigma , phi , v , delta , tau ) {
                     var a, x1, x2, x3;
-                    a = Math.Math.log(Math.pow(sigma, 2));
+                    a = Math.log(Math.pow(sigma, 2));
                     if (equation(phi, v, 0, a, tau, delta) < 0 ){
                         x1 = -1;
                         while (equation(phi, v, x1, a, tau, delta) < 0){
