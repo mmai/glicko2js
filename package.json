@@ -1,7 +1,7 @@
 {
   "name": "glicko2",
   "description": "glicko2 ranking system",
-  "version": "0.8.7",
+  "version": "1.0.0",
   "author": "Henri Bourcereau",
   "keywords": [
     "glicko",
@@ -14,7 +14,7 @@
   },
   "main": "./glicko2.js",
   "devDependencies": {
-    "mocha": "8.2.x",
+    "mocha": "^10.1.0",
     "should": "13.2.x"
   },
   "scripts": {
