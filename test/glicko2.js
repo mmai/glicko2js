@@ -93,10 +93,9 @@ describe('Glicko2', function(){
             */
 
             glicko.updateRatings(matches);
-
-            (Math.abs(Ryan.getRating() - 1464) < 0.1).should.be.true;
-            (Math.abs(Ryan.getRd() - 151.52) < 0.01).should.be.true;
-            (Math.abs(Ryan.getVol() - 0.05999) < 0.00001).should.be.true;
+            (Math.abs(Ryan.getRating() - 1464.06) < 0.01).should.equal(true);
+            (Math.abs(Ryan.getRd() - 151.52) < 0.01).should.equal(true);
+            (Math.abs(Ryan.getVol() - 0.05999) < 0.00001).should.equal(true);
           });
         it('should allow to be called multiple times', function(){
           var settings = {
@@ -142,9 +141,9 @@ describe('Glicko2', function(){
             glicko_new.updateRatings(matches_new);
 
             //The ratings in both systems should be the same 
-            (Math.abs(Ryan.getRating() - Ryan_new.getRating()) < 0.1).should.be.true;
-            (Math.abs(Ryan.getRd() - Ryan_new.getRd()) < 0.1).should.be.true;
-            (Math.abs(Ryan.getVol() - Ryan_new.getVol()) < 0.00001).should.be.true;
+            (Math.abs(Ryan.getRating() - Ryan_new.getRating()) < 0.1).should.equal(true);
+            (Math.abs(Ryan.getRd() - Ryan_new.getRd()) < 0.1).should.equal(true);
+            (Math.abs(Ryan.getVol() - Ryan_new.getVol()) < 0.00001).should.equal(true);
           });
         it('should be able to update ratings when a player did not play', function(){
           var settings = {
@@ -183,9 +182,9 @@ describe('Glicko2', function(){
 
             glicko.updateRatings(race);
 
-            (Math.abs(Ryan.getRating() - 1685.7) < 0.1).should.be.true;
-            (Math.abs(Ryan.getRd() - 151.52) < 0.01).should.be.true;
-            (Math.abs(Ryan.getVol() - 0.06000) < 0.00001).should.be.true;
+            (Math.abs(Ryan.getRating() - 1685.7) < 0.1).should.equal(true);
+            (Math.abs(Ryan.getRd() - 151.52) < 0.01).should.equal(true);
+            (Math.abs(Ryan.getVol() - 0.06000) < 0.00001).should.equal(true);
         });
       });
   });

@@ -437,7 +437,7 @@
                 while (Math.abs(B - A) > epsilon){
                     C = A + (A - B) * fA /(fB - fA );
                     fC = f(C);
-                    if (fC * fB < 0){
+                    if (fC * fB <= 0){ // March 22, 2022 algorithm update : `<` replaced by `<=`
                         A = B;
                         fA = fB;
                     } else {
