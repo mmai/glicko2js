@@ -1,5 +1,21 @@
 var glicko2 = require('../glicko2');
 
+
+// Generate normally distributed random numbers 
+// cf. https://mika-s.github.io/javascript/random/normal-distributed/2019/05/15/generating-normally-distributed-random-numbers-in-javascript.html
+function boxMullerTransform() {
+    const u1 = Math.random();
+    const u2 = Math.random();
+    const z0 = Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(2.0 * Math.PI * u2);
+    const z1 = Math.sqrt(-2.0 * Math.log(u1)) * Math.sin(2.0 * Math.PI * u2);
+    return { z0, z1 };
+}
+
+function getNormallyDistributedRandomNumber(mean, stddev) {
+    const { z0, _ } = boxMullerTransform();
+    return z0 * stddev + mean;
+}
+
 describe('Glicko2', function(){
     describe('makePlayer()', function(){
         it('should make a default player when passed no settings', function(){
@@ -223,7 +239,57 @@ describe("Race", function(){
                 [John, Mary, 1]
             ]);
         })
-    })
+    });
+
+
+  function getRound(ranking, players) {
+
+    let playerScores = players.map((player) => {
+      score: getNormallyDistributedRandomNumber(player.real, 200),
+      player: player
+    }).sort((a,b) => a.score - b.score);
+
+    let raceResults = [];
+    let current = [];
+    playerScores.forEach(pscore => {
+      if (current.length && current[0].score == pscore.score){
+        current.push(pscore);
+      } else {
+        raceResults.push(current.map((currScore) => currScore.player));
+        current = [pscore];
+      }
+    });
+    raceResults.push(current.map((currScore) => currScore.player));
+
+    var race = ranking.makeRace(raceResults);
+    ranking.updateRatings(race);
+
+  }
+
+  describe("evaluateAlgorithm", function(){
+    it("Should approximate reality", function(){
+      var settings = {
+        tau : 0.5,
+        rpd : 604800,
+        rating : 1500,
+        rd : 200,
+        vol : 0.06
+      };
+      var ranking = new glicko2.Glicko2(settings);
+
+      var players = [];
+      for (let idx = 0; idx < 10; idx++) {
+        players.push({
+          name: "p" + idx,
+          real: (1100 + 100*idx),
+          player: ranking.makePlayer(),
+        });
+      }
+
+
+
+    });
+  })
 
 })
 
