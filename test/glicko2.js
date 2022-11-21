@@ -244,10 +244,10 @@ describe("Race", function(){
 
   function getRound(ranking, players) {
 
-    let playerScores = players.map((player) => {
+    let playerScores = players.map((player) => ({
       score: getNormallyDistributedRandomNumber(player.real, 200),
       player: player
-    }).sort((a,b) => a.score - b.score);
+    }).sort((a,b) => a.score - b.score));
 
     let raceResults = [];
     let current = [];
