@@ -216,7 +216,11 @@ describe('Glicko2', function(){
             var p1 = glicko.makePlayer(1500, 100, 0.06);
             var p2 = glicko.makePlayer(1300, 100, 0.06);
             var expected = p1.predict(p2);
+
             (Math.abs(expected - 0.74) < 0.001).should.equal(true);
+
+            var gexpected = glicko.predict(p1, p2);
+            gexpected.should.equal(expected);
         });
       });
   });

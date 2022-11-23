@@ -58,6 +58,7 @@
 
             glicko.updateRatings(matches);
             showRankings();
+            document.write("<div><br>Ryan has " + Math.ceil(Ryan.predict(Bob) * 100) + "% chances of winning against Bob in the next match</div>");
         </script>
 
         <h2>Rankings after tournament 2</h2>
@@ -71,7 +72,11 @@
             matches.push([Mary, John, 0]);
             glicko.updateRatings(matches);
             showRankings();
+
+            document.write("<div><br>Ryan has " + Math.ceil(glicko.predict(Ryan, Bob) * 100) + "% chances of winning against Bob in the next match</div>");
         </script>
+
+
 
         <h2>Rankings after two races</h2>
         <script>

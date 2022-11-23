@@ -70,6 +70,14 @@ Get players list
 var players = ranking.getPlayers();
 ```
 
+Predict outcome
+
+``` javascript
+var expected = ranking.predict(Ryan, Bob); // or Ryan.predict(Bob);
+console.log("Ryan has " + (expected * 100) + "% chances of winning against Bob in the next match");
+```
+
+
 ## When to update rankings
 
 You should not update the ranking after each match.

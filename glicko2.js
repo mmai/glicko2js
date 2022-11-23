@@ -286,6 +286,10 @@
             this.calculatePlayersRatings();
         };
 
+        Glicko2.prototype.predict = function(player1, player2){
+          return player1.predict(player2);
+        };
+
         //============== VOLATILITY ALGORITHMS (Step 5 of the global glicko2 algorithm)
         var volatility_algorithms = {
             oldprocedure: function(v, delta) {
