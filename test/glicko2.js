@@ -203,6 +203,22 @@ describe('Glicko2', function(){
             (Math.abs(Ryan.getVol() - 0.06000) < 0.00001).should.equal(true);
         });
       });
+      describe('predict()', function(){
+        it('should calculate expected outcome', function(){
+            var settings = {
+                tau : 0.5,
+                rpd : 604800,
+                rating : 1500,
+                rd : 200,
+                vol : 0.06
+            };
+            var glicko = new glicko2.Glicko2(settings);
+            var p1 = glicko.makePlayer(1500, 100, 0.06);
+            var p2 = glicko.makePlayer(1300, 100, 0.06);
+            var expected = p1.predict(p2);
+            (Math.abs(expected - 0.74) < 0.001).should.equal(true);
+        });
+      });
   });
 
 describe("Race", function(){

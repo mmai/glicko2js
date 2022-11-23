@@ -139,6 +139,14 @@
         return 1 / (1 + Math.exp(-1 * this._g(p2RD) *  (this.__rating - p2rating)));
     };
 
+    // expected outcome cf. https://github.com/mmai/glicko2js/issues/19
+    //  identical to the _E function, except for `_g(p2RD)` which is replaced by 
+    //  `_g(Math.sqrt(Math.pow(this.__rd, 2) + Math.pow(p2RD, 2)))`
+    Player.prototype.predict = function (p2){
+        var diffRD = Math.sqrt(Math.pow(this.__rd, 2) + Math.pow(p2.__rd, 2));
+        return 1 / (1 + Math.exp(-1 * this._g(diffRD) *  (this.__rating - p2.__rating)));
+    };
+
     // The Glicko2 g(RD) function.
     Player.prototype._g = function(RD){
         return 1 / Math.sqrt(1 + 3 * Math.pow(RD, 2) / Math.pow(Math.PI, 2));
