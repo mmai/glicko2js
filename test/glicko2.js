@@ -198,9 +198,15 @@ describe('Glicko2', function(){
 
             glicko.updateRatings(race);
 
+      // console.log(Ryan.getRating(), Ryan.getRd(), Ryan.getVol());
+        //v1
             (Math.abs(Ryan.getRating() - 1685.7) < 0.1).should.equal(true);
             (Math.abs(Ryan.getRd() - 151.52) < 0.01).should.equal(true);
             (Math.abs(Ryan.getVol() - 0.06000) < 0.00001).should.equal(true);
+      //v2
+            // (Math.abs(Ryan.getRating() - 1563.6) < 0.1).should.equal(true);
+            // (Math.abs(Ryan.getRd() - 175.40) < 0.01).should.equal(true);
+            // (Math.abs(Ryan.getVol() - 0.06) < 0.00001).should.equal(true);
         });
       });
       describe('predict()', function(){
@@ -250,6 +256,7 @@ describe("Race", function(){
             );
 
             var matches = race.getMatches();
+      //v1
             matches.should.eql([
                 [Ryan, Bob, 1],
                 [Ryan, John, 1],
@@ -258,6 +265,12 @@ describe("Race", function(){
                 [Bob, Mary, 1],
                 [John, Mary, 1]
             ]);
+      //v2
+            // matches.should.eql([
+            //     [Ryan, Bob, 1],
+            //     [Bob, John, 0.5],
+            //     [John, Mary, 1]
+            // ]);
         })
     });
 
@@ -266,7 +279,6 @@ describe("Race", function(){
     var predictionCount = 0;
     while(scoreRating = scoreRatings.pop()){
       scoreRatings.forEach(adversary => {
-        // console.log(scoreRating.rating, adversary.rating);
         predictedWin = scoreRating.rating > adversary.rating;
         realWin = scoreRating.score > adversary.score;
         if (predictedWin == realWin){
@@ -278,11 +290,9 @@ describe("Race", function(){
     return predictionOk / predictionCount;
   }
 
-  function makeRound(ranking, players, realRatings, scores) {
-  // function makeRound(ranking, players, realRatings) {
+  function makeRound(ranking, players, realRatings) {
     let playerScores = realRatings.map(function(real, i) {
-      // let score = Math.ceil(getNormallyDistributedRandomNumber(real, 200));
-      let score = scores[i];// same scores for each match
+      let score = Math.ceil(getNormallyDistributedRandomNumber(real, 150));
       return {
         real,
         score,
@@ -302,7 +312,6 @@ describe("Race", function(){
 
     let realPrecision = calculatePrecision(idealRatings);
     let rankingPrecision = calculatePrecision(scoreRatings);
-    console.log("precision", realPrecision, rankingPrecision);
 
     let raceResults = [];
     let current = [];
@@ -319,16 +328,13 @@ describe("Race", function(){
     var race = ranking.makeRace(raceResults);
     ranking.updateRatings(race);
 
-    // scoreRatings = playerScores.map(pscore => ({
-    //   score: pscore.score,
-    //   rating: pscore.player.getRating(),
-    // }));
-    // rankingPrecision = calculatePrecision(scoreRatings);
-    // console.log("precision after", rankingPrecision);
-
-    return ranking;
+    return {
+      realPrecision,
+      rankingPrecision
+    };
   }
 
+  // XXX : trying to replicate http://www.tckerrigan.com/Misc/Multiplayer_Elo/ procedure to test accuracy of the algorithm
   describe("evaluateAlgorithm", function(){
     it("Should approximate reality", function(){
       var settings = {
@@ -343,33 +349,19 @@ describe("Race", function(){
       let nbPlayers = 10;
       var players = [];
       var realRatings = [];
-      var scores = []; // for fixed simulated scores
       var diff = 1; // add or substract 1 alternatively
       for (let idx = 0; idx < nbPlayers; idx++) {
         realRatings.push(1100 + 100*idx);
-        scores.push(Math.ceil(getNormallyDistributedRandomNumber(1100 + 100*idx, 200)));
         players.push(ranking.makePlayer(1500 + diff, 200, 0.06));
         diff = 0 - diff;
       }
 
-      for (let numRound = 1; numRound < 15; numRound++) {
-        console.log("\n------------- Round ", numRound);
-        // ranking = makeRound(ranking, players, realRatings);
-        ranking = makeRound(ranking, players, realRatings, scores);
-        // predictionAvg = 
-        // precision = 0;
-        // ranking.getPlayers().forEach((player,i) => {
-        //   real = realRatings[i];
-        //   diff = (real - player.getRating()) / real;
-          // precision += Math.abs(diff);
-          // console.log(real, player.getRating(), diff);
-        // })
-        // console.log(numRound, Math.ceil(10000 * (1 - precision / nbPlayers)) / 100);
-        players = ranking.getPlayers();
+      let precisions = [];
+      for (let numRound = 1; numRound < 50; numRound++) {
+        precisions = makeRound(ranking, players, realRatings);
+        // console.log(precisions.realPrecision, precisions.rankingPrecision);
       }
-
-      // console.log(precision / nbPlayers);
-      // (precision / nbPlayers < 0.05).should.equal(true);
+      // (Math.abs(precisions.realPrecision - precisions.rankingPrecision) < 0.01).should.equal(true);
     });
   })
 
