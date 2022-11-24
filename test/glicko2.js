@@ -261,37 +261,48 @@ describe("Race", function(){
         })
     });
 
-  function calculatePrecision(pscores){
+  function calculatePrecision(scoreRatings){
     var predictionOk = 0;
     var predictionCount = 0;
-    while(pscore = pscores.pop()){
-      pscores.forEach(adversary => {
-        predictedWin = pscore.player.getRating() > adversary.player.getRating();
-        console.log("predicted", pscore.player.getRating(), adversary.player.getRating());
-        console.log("real", pscore.score, adversary.score);
-        realWin = pscore.score > adversary.score;
+    while(scoreRating = scoreRatings.pop()){
+      scoreRatings.forEach(adversary => {
+        // console.log(scoreRating.rating, adversary.rating);
+        predictedWin = scoreRating.rating > adversary.rating;
+        realWin = scoreRating.score > adversary.score;
         if (predictedWin == realWin){
           predictionOk += 1;
         }
         predictionCount += 1;
       });
     }
-    console.log(predictionOk, predictionCount);
     return predictionOk / predictionCount;
   }
 
-  function getRound(ranking, players, realRatings) {
-
+  function makeRound(ranking, players, realRatings, scores) {
+  // function makeRound(ranking, players, realRatings) {
     let playerScores = realRatings.map(function(real, i) {
-      let score = Math.ceil(getNormallyDistributedRandomNumber(real, 200));
+      // let score = Math.ceil(getNormallyDistributedRandomNumber(real, 200));
+      let score = scores[i];// same scores for each match
       return {
+        real,
         score,
         player: players[i]
       };
     }).sort((a,b) => b.score - a.score);
 
-    let rankingPrecision = calculatePrecision(playerScores);
-    console.log("precision", rankingPrecision);
+    let scoreRatings = playerScores.map(pscore => ({
+      score: pscore.score,
+      rating: pscore.player.getRating(),
+    }));
+
+    let idealRatings = playerScores.map(pscore => ({
+      score: pscore.score,
+      rating: pscore.real,
+    }));
+
+    let realPrecision = calculatePrecision(idealRatings);
+    let rankingPrecision = calculatePrecision(scoreRatings);
+    console.log("precision", realPrecision, rankingPrecision);
 
     let raceResults = [];
     let current = [];
@@ -304,12 +315,15 @@ describe("Race", function(){
       }
     });
     raceResults.push(current.map((currScore) => currScore.player));
-    // console.log(raceResults);
 
     var race = ranking.makeRace(raceResults);
     ranking.updateRatings(race);
 
-    // rankingPrecision = calculatePrecision(playerScores);
+    // scoreRatings = playerScores.map(pscore => ({
+    //   score: pscore.score,
+    //   rating: pscore.player.getRating(),
+    // }));
+    // rankingPrecision = calculatePrecision(scoreRatings);
     // console.log("precision after", rankingPrecision);
 
     return ranking;
@@ -329,15 +343,19 @@ describe("Race", function(){
       let nbPlayers = 10;
       var players = [];
       var realRatings = [];
+      var scores = []; // for fixed simulated scores
+      var diff = 1; // add or substract 1 alternatively
       for (let idx = 0; idx < nbPlayers; idx++) {
         realRatings.push(1100 + 100*idx);
-        players.push(ranking.makePlayer());
+        scores.push(Math.ceil(getNormallyDistributedRandomNumber(1100 + 100*idx, 200)));
+        players.push(ranking.makePlayer(1500 + diff, 200, 0.06));
+        diff = 0 - diff;
       }
 
-      let precision
-      for (let numRound = 1; numRound < 55; numRound++) {
-        console.log("------------- Round ", numRound);
-        ranking = getRound(ranking, players, realRatings);
+      for (let numRound = 1; numRound < 15; numRound++) {
+        console.log("\n------------- Round ", numRound);
+        // ranking = makeRound(ranking, players, realRatings);
+        ranking = makeRound(ranking, players, realRatings, scores);
         // predictionAvg = 
         // precision = 0;
         // ranking.getPlayers().forEach((player,i) => {
@@ -348,7 +366,6 @@ describe("Race", function(){
         // })
         // console.log(numRound, Math.ceil(10000 * (1 - precision / nbPlayers)) / 100);
         players = ranking.getPlayers();
-        console.log("first player rating", players[0].getRating());
       }
 
       // console.log(precision / nbPlayers);

@@ -7,6 +7,30 @@
     Race.prototype.getMatches = function(){
         return this.matches;
     };
+    Race.prototype.computeMatches_all = function(results){
+        var players = [];
+        var position = 0;
+
+        results.forEach(function (rank) {
+            position += 1;
+            rank.forEach(function (player) {
+                players.push({"player": player, "position": position});
+            })
+        })
+
+        function computeMatches(players){
+            if (players.length === 0) return [];
+
+            var player1 = players.shift()
+            var player1_results  = players.map(function(player2){
+                return [player1.player, player2.player, (player1.position < player2.position) ? 1 : 0.5];
+            });
+
+            return player1_results.concat(computeMatches(players));
+        }
+
+        return computeMatches(players)
+    }
     Race.prototype.computeMatches = function(results){
         var players = [];
         var position = 0;
