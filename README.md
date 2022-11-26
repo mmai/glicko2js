@@ -104,7 +104,7 @@ At the end of the week, for **each** player (even those that did not play):
 
 It is important to update rankings even for players that did not play : this is the way the system can increase their rating deviation over time.
 
-At the last step, don't overwrite the player current week data, as it will be loaded when calculating its oppenents new rankings.
+At the last step, don't overwrite the player current week data, as it will be loaded when calculating its opponents new rankings.
 
 ### Support for multiple competitors matches (experimental)
 
