@@ -77,6 +77,26 @@ You can see a client side javascript example using tournaments here : https://gi
 Here is what says Mark E. Glickman about the number of matches in a tournament or rating period (cf. http://www.glicko.net/glicko/glicko2.pdf ) :
 > The Glicko-2 system works best when the number of games in a rating period is moderate to large, say an average of at least 10-15 games per player in a rating period.
 
+## How to deal with a big database of players
+
+If you don't want to load all the players and new matches at once in memory in order to update rankings, here is a strategy you can follow:
+
+Say you want to update rankings each week, and you have a history of the rankings data (rating, rating deviation, volatility) for each player.
+
+At the end of the week, for **each** player (even those that did not play):
+  - load from the database: 
+    - the player ranking data for the current week
+    - the matches the player has played during the week
+    - for each match, the player's opponent data for the current week
+  - add the player and his opponents to a new glicko instance
+  - add the matches to the glicko instance
+  - update glicko rankings
+  - save the player updated ranking data to database as the next week player data
+
+It is important to update rankings even for players that did not play : this is the way the system can increase their rating deviation over time.
+
+At the last step, don't overwrite the player current week data, as it will be loaded when calculating its oppenents new rankings.
+
 ### Support for multiple competitors matches (experimental)
 
 **Note: the glicko2 algorithm was not designed for multiple competitors matches, this is a naive workaround whose results should be taken whith caution.** 
