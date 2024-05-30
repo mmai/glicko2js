@@ -8,51 +8,95 @@ The algorithm is explained by its author, Mark E. Glickman, on http://glicko.net
 
 Each player begins with a rating, a rating deviation (accuracy of the rating) and a volatility (speed of rating evolution). These values will evolve according to the outcomes of matches with other players.
 
-## Usage
+## Installation
 
-In the browser, you need to include the glicko2.js file :
+### As a node.js module
+
+glicko2.js is available as a [npm module](https://www.npmjs.com/package/glicko2).
+
+Install with npm:
+
+``` shell
+npm install glicko2
+```
+
+or with yarn:
+
+``` shell
+yarn add glicko2
+```
+
+### In the browser
+
+You just need to include the glicko2.js script.
+See index.html in the example folder.
 
 ``` html
 <script src="glicko2.js"></script>
 ```
 
+### With [bower](http://bower.io/)
+
+``` shell
+bower install glicko2
+```
+``` html
+<script src="bower_components/glicko2/glicko2.js"></script>
+```
+
+## Usage
+
 In node.js, just require the module :
 
 ``` javascript
-var glicko2 = require('glicko2');
+import { Glicko2 } from 'glicko2';
+```
+
+or
+
+``` javascript
+const { Glicko2 } = require('glicko2');
 ```
 
 First we initiate a ranking manager and create players with initial ratings, rating deviations and volatilities.
 
 ``` javascript
-var settings = {
+const ranking = new Glicko2({
   // tau : "Reasonable choices are between 0.3 and 1.2, though the system should
   //      be tested to decide which value results in greatest predictive accuracy."
-  tau : 0.5,
+  // If not set, default value is 0.5
+  tau: 0.5,
+
   // rating : default rating
-  rating : 1500,
-  //rd : Default rating deviation 
+  // If not set, default value is 1500
+  rating: 1500,
+
+  // rd : Default rating deviation
   //     small number = good confidence on the rating accuracy
-  rd : 200,
-  //vol : Default volatility (expected fluctation on the player rating)
-  vol : 0.06
-};
-var ranking = new glicko2.Glicko2(settings);
+  // If not set, default value is 350
+  rd: 200,
+
+  // vol : Default volatility (expected fluctation on the player rating)
+  // If not set, default value is 0.06
+  vol: 0.06,
+});
 
 // Create players
-var Ryan = ranking.makePlayer();
-var Bob = ranking.makePlayer(1400, 30, 0.06);
-var John = ranking.makePlayer(1550, 100, 0.06);
-var Mary = ranking.makePlayer(1700, 300, 0.06);
+const Ryan = ranking.makePlayer();
+const Bob = ranking.makePlayer(1400, 30, 0.06);
+const John = ranking.makePlayer(1550, 100, 0.06);
+const Mary = ranking.makePlayer(1700, 300, 0.06);
 ```
 
 We can then enter results, calculate the new ratings...
 
 ``` javascript
-var matches = [];
+const matches = [];
+
 matches.push([Ryan, Bob, 1]); //Ryan won over Bob
 matches.push([Ryan, John, 0]); //Ryan lost against John
 matches.push([Ryan, Mary, 0.5]); //A draw between Ryan and Mary
+
 ranking.updateRatings(matches);
 ```
 
@@ -67,13 +111,13 @@ console.log("Ryan new volatility: " + Ryan.getVol());
 Get players list
 
 ``` javascript
-var players = ranking.getPlayers();
+const players = ranking.getPlayers();
 ```
 
 Predict outcome
 
 ``` javascript
-var expected = ranking.predict(Ryan, Bob); // or Ryan.predict(Bob);
+const expected = ranking.predict(Ryan, Bob); // or Ryan.predict(Bob);
 console.log("Ryan has " + (expected * 100) + "% chances of winning against Bob in the next match");
 ```
 
@@ -81,9 +125,9 @@ console.log("Ryan has " + (expected * 100) + "% chances of winning against Bob i
 
 You should not update the ranking after each match.
 The typical use of glicko is to calculate the ratings after each tournament (ie collection of matches in a period of time).
-A player rating will evolve after a tournament has finished, but not during the tournament. 
+A player rating will evolve after a tournament has finished, but not during the tournament.
 
-Here is what says Mark E. Glickman about the number of matches in a tournament or rating period (cf. http://www.glicko.net/glicko/glicko2.pdf ) :
+Here is what says Mark E. Glickman about the number of matches in a tournament or rating period (cf. <http://www.glicko.net/glicko/glicko2.pdf>) :
 > The Glicko-2 system works best when the number of games in a rating period is moderate to large, say an average of at least 10-15 games per player in a rating period.
 
 ## How to deal with a big database of players
@@ -93,7 +137,7 @@ If you don't want to load all the players and new matches at once in memory in o
 Say you want to update rankings each week, and you have a history of the rankings data (rating, rating deviation, volatility) for each player.
 
 At the end of the week, for **each** player (even those that did not play):
-  - load from the database: 
+  - load from the database:
     - the player ranking data for the current week
     - the matches the player has played during the week
     - for each match, the player's opponent data for the current week
@@ -108,14 +152,14 @@ At the last step, don't overwrite the player current week data, as it will be lo
 
 ### Support for multiple competitors matches (experimental)
 
-**Note: the glicko2 algorithm was not designed for multiple competitors matches, this is a naive workaround whose results should be taken whith caution.** 
+**Note: the glicko2 algorithm was not designed for multiple competitors matches, this is a naive workaround whose results should be taken whith caution.**
 
 You can enter results from games where multiple competitors play against each other at the same time (ie swimming, racing...).
 
 First make "Race" objects by entering the results in an array of "positions", where each position is an array of players at this position :
 
 ```javascript
-var race1 = glicko.makeRace(
+const race1 = glicko.makeRace(
     [
         [Ryan], //Ryan won the race
         [Bob, John], //Bob and John ended ex aequo at the 2nd position
@@ -123,7 +167,7 @@ var race1 = glicko.makeRace(
     ]
 );
 
-var race2 = glicko.makeRace(
+const race2 = glicko.makeRace(
     [
         [Mary], // won
         [Bob],  // 2nd
@@ -135,49 +179,30 @@ var race2 = glicko.makeRace(
 ```
 
 Then convert the races to the equivalent matches :
-```javascript
+``` javascript
 
-var matches1 = race1.getMatches();
-var matches2 = race2.getMatches();
+const matches1 = race1.getMatches();
+const matches2 = race2.getMatches();
 
-var allMatches = matches1.concat(matches2)
+const allMatches = matches1.concat(matches2)
 
 ranking.updateRatings(allMatches);
 ```
 
 You can also update ratings for one race without converting to matches :
 
-```javascript
+``` javascript
 ranking.updateRatings(race1);
 ```
 
-## Installation
+## Testing
 
-### In the browser
-
-You just need to include the glicko2.js script.
-See index.html in the example folder.
-
-``` html
-<script src="glicko2.js"></script>
-```
-
-### With [bower](http://bower.io/)
+Run unit tests with:
 
 ``` shell
-$ bower install glicko2
-```
-``` html
-<script src="bower_components/glicko2/glicko2.js"></script>
+npm run test
 ```
 
-### As a node.js module
+## License
 
-glicko2.js is available as a npm module.
-
-Install with:
-
-``` shell
-$ npm install glicko2
-```
-
+This library is under [MIT License](LICENSE.md).
