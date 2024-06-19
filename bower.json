@@ -1,6 +1,6 @@
 {
   "name": "glicko2",
-  "version": "0.8.7",
+  "version": "1.2.1",
   "homepage": "https://github.com/mmai/glicko2js",
   "authors": [
     "Henri Bourcereau <henri.bourcereau@gmail.com>"
