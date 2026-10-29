@@ -16,7 +16,7 @@
   "main": "./glicko2.js",
   "types": "./glicko2.d.ts",
   "devDependencies": {
-    "mocha": "^10.1.0",
+    "mocha": "^12.0.3",
     "should": "13.2.x"
   },
   "scripts": {
