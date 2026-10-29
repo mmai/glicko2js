@@ -14,6 +14,7 @@
     "url": "git://github.com/mmai/glicko2js.git"
   },
   "main": "./glicko2.js",
+  "types": "./glicko2.d.ts",
   "devDependencies": {
     "mocha": "^10.1.0",
     "should": "13.2.x"
